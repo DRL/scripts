@@ -60,12 +60,13 @@ if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(
 		prog='tagc_plot.py',
-		usage = '%(prog)s infile [-p max_phylum_plot] [-f fig_format] [-t tax_level] [-m] [-h]',
+		usage = '%(prog)s infile [-p max_phylum_plot] [-f fig_format] [-t tax_level] [-cm colormap] [-m] [-h]',
 		add_help=True)
 	parser.add_argument('i', metavar = 'infile', help='Input file (blobplot.txt)')
 	parser.add_argument('-p', metavar = 'max_phylum_plot', default=7, type = int, help='Maximum number of phyla to plot (Default = 7)')
 	parser.add_argument('-f', metavar = 'fig_format', default="png", help='Format in which figure(s) to plot (Default = png)') 
 	parser.add_argument('-t', metavar = 'tax_level', default=1, type = int, help='Taxonomic level on which to plot. Superkingdom = 0, Phylum = 1, Order = 2, Species = 3 (Default = 1)')
+	parser.add_argument('-cm', metavar = 'colormap', default="Set2", help='Matplotlib colormap to be used for plotting (names are case-sensitive)') 
 	parser.add_argument('-m', action='store_true' , help='Set flag for multi-figure plotting.') 
 	args = parser.parse_args()
 
@@ -73,18 +74,25 @@ if __name__ == "__main__":
 
 	blob_file = check_file(args.i)
 	multi_plot = args.m
+	colormap = args.cm # one should validate this ...
 	max_phylum_plot, fig_format, tax_level = check_parameters(args.p, args.f, args.t)
 	out_file = blob_file + str(".") + str(fig_format) 
 
-	# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-	# 									CONSTANTS							 	#
-	# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+	# # # # # # 
+	# CONSTANTS	
+	# # # # # # 
+
 	almost_black = '#262626'
 	grey = '#d3d3d3'
 	background_grey = '#F0F0F5'
 	white = '#ffffff'
 	nullfmt = NullFormatter()         # no labels on axes
 
+	# # # # #
+	# ACTION
+	# # # # #
+
+	# Data preparation
 
 	blob_data = np.genfromtxt(blob_file, names=True, delimiter="\t", dtype=None)
 	gc_key = blob_data.dtype.names[2]
@@ -95,13 +103,17 @@ if __name__ == "__main__":
 	phylum_count=get_phylum_count(blob_data[tax_key])
 	sorted_phyla = sorted(phylum_count, key=lambda x : phylum_count[x], reverse=True)
 
-	# definitions for the axes 
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	# Basics
 	left, width = 0.1, 0.65
 	bottom, height = 0.1, 0.65
 	bottom_h = left_h = left+width+0.02
 	rect_scatter = [left, bottom, width, height]
 	rect_histx = [left, bottom_h, width, 0.2]
 	rect_histy = [left_h, bottom, 0.2, height]
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	# Setting up plots and axes
 	plt.figure(1, figsize=(20,20))
@@ -125,8 +137,12 @@ if __name__ == "__main__":
 	axHistx.set_axisbelow(True)
 	axHisty.set_axisbelow(True)
 
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 	# put colormap in colors 
-	colors = cm.get_cmap(name='Set2')
+	colors = cm.get_cmap(name=colormap)
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	# Plotting
 	top_bins = np.arange(0, 1, 0.01)
