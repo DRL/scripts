@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-# File   :  	tagc_plot.py
-# Author : 		Dominik R. Laetsch, dominik.laetsch at gmail dot com 
+# File   : tagc_plot.py
+# Author : Dominik R. Laetsch, dominik.laetsch at gmail dot com 
 
 # # # # # 
 # MODULES										
@@ -62,10 +62,10 @@ if __name__ == "__main__":
 		prog='tagc_plot.py',
 		usage = '%(prog)s infile [-p max_phylum_plot] [-f fig_format] [-t tax_level] [-m] [-h]',
 		add_help=True)
-	parser.add_argument('i', metavar = 'infile', 		 			help='Input file (blobplot.txt)')
-	parser.add_argument('-p', metavar = 'max_phylum_plot', 			default=7, 		type = int, 	help='Maximum number of phyla to plot (Default = 7)')
-	parser.add_argument('-f', metavar = 'fig_format', 	default="png", 	help='Format in which figure(s) to plot (Default = png)') 
-	parser.add_argument('-t', metavar = 'tax_level', 			default=1, 		type = int, 	help='Taxonomic level on which to plot. Superkingdom = 0, Phylum = 1, Order = 2, Species = 3 (Default = 1)')
+	parser.add_argument('i', metavar = 'infile', help='Input file (blobplot.txt)')
+	parser.add_argument('-p', metavar = 'max_phylum_plot', default=7, type = int, help='Maximum number of phyla to plot (Default = 7)')
+	parser.add_argument('-f', metavar = 'fig_format', default="png", help='Format in which figure(s) to plot (Default = png)') 
+	parser.add_argument('-t', metavar = 'tax_level', default=1, type = int, help='Taxonomic level on which to plot. Superkingdom = 0, Phylum = 1, Order = 2, Species = 3 (Default = 1)')
 	parser.add_argument('-m', action='store_true' , help='Set flag for multi-figure plotting.') 
 	args = parser.parse_args()
 
