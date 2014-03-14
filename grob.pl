@@ -111,10 +111,10 @@ while ( my $bam_line = <BAM_FILE> ) {
         my $fasta
             = ">"
             . $array[1] . "\n"
-            . $array[4] . "\n>"
+            . $array[3] . "\n>"
             #. &revcom_with_flag( $array[3], $array[4] ) . "\n>" # this is for putting reads in the original orientation
             . $array[6] . "\n"
-            . $array[9] . "\n";
+            . $array[8] . "\n";
             #. &revcom_with_flag( $array[8], $array[9] ) . "\n"; # this is for putting reads in the original orientation
         if (   exists( $bad_contigs{ $array[2] . "/" } )
             && exists( $bad_contigs{ $array[7] . "/" } ) )
