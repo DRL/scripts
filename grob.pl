@@ -61,12 +61,12 @@ sub print_status {
 my %bad_contigs      = &read_contig_file($bad_contigs);
 my %high_cov_contigs = &read_contig_file($high_cov_contigs);
 
-open( GOOD, ">" . $bam_file . "_plus_reads_mapping_good_contigs.txt" )
-    || die "Writing $bam_file.good_contigs_reads_mapping.txt : No no !\n";
-open( BAD, ">" . $bam_file . "_plus_reads_mapping_bad_contigs.txt" )
-    || die "Writing $bad_contigs._reads_mapping.txt : No no !\n";
-open( HIGHCOV, ">" . $bam_file . "_plus_reads_mapping_high_cov_contigs.txt" )
-    || die "Writing $high_cov_contigs._reads_mapping.txt : No no !\n";
+open( GOOD, ">" . $bam_file . ".pass.txt" )
+    || die "Writing $bam_file.pass.txt : No no !\n";
+open( BAD, ">" . $bam_file . ".fail.txt" )
+    || die "Writing $bad_contigs.fail.txt : No no !\n";
+open( HIGHCOV, ">" . $bam_file . ".high.txt" )
+    || die "Writing $high_cov_contigs.high.txt : No no !\n";
 
 open BAM_FILE, "samtools view $bam_file | " or die $!;
 
@@ -116,9 +116,11 @@ while ( my $bam_line = <BAM_FILE> ) {
         my $fasta
             = ">"
             . $array[1] . "\n"
-            . &revcom_with_flag( $array[3], $array[4] ) . "\n>"
+            . $array[4] . "\n>"
+            #. &revcom_with_flag( $array[3], $array[4] ) . "\n>" # this is for putting reads in the original orientation
             . $array[6] . "\n"
-            . &revcom_with_flag( $array[8], $array[9] ) . "\n";
+            . $array[9] . "\n"
+            #. &revcom_with_flag( $array[8], $array[9] ) . "\n"; # this is for putting reads in the original orientation
         if (   exists( $bad_contigs{ $array[2] . "/" } )
             && exists( $bad_contigs{ $array[7] . "/" } ) )
         {
@@ -153,7 +155,7 @@ close GOOD;
 close BAD;
 close HIGHCOV;
 
-open( LOG, ">" . $bam_file . "_plus_log.txt" )
-    || die "Writing " . $bam_file . "_plus_log.txt : No no !\n";
+open( LOG, ">" . $bam_file . ".log.txt" )
+    || die "Writing " . $bam_file . ".log.txt : No no !\n";
 print_status(LOG);
 close LOG;
