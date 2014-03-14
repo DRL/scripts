@@ -59,7 +59,7 @@ min_blast_hit_len = int(sys.argv[4])
 max_blast_hit_eval = sys.argv[5]
 high_cov = int(sys.argv[6])
 low_cov = int(sys.argv[7])
-high_gc = int(sys.argv[8]) # 0.7
+high_gc = float(sys.argv[8]) # 0.7
 low_gc = 0.0
 contig_dict = {}
 ###############################################################################
