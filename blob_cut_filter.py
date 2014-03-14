@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# coding=utf-8
+
+# File   : blob_cut_filter.py
+# Author : Dominik R. Laetsch, dominik.laetsch at gmail dot com 
+
 from __future__ import division
 import sys
 ###############################################################################

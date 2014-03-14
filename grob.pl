@@ -1,7 +1,13 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
+
 use strict;
 use warnings;
-use Data::Dumper;
+use Getopt::Long qw(:config pass_through no_ignore_case);
+use Pod::Usage;
+
+# use Data::Dumper; # debugging
+# ADD revcom through flag. should not be default since w/o faster
+# ADD commandline arguments
 
 my $bam_file         = $ARGV[0];
 my $bad_contigs      = $ARGV[1];
@@ -12,15 +18,16 @@ my $number_of_good_reads     = 0;
 my $number_of_bad_reads      = 0;
 my $number_of_high_cov_reads = 0;
 
-sub revcom_with_flag{
-    my $seq = $_[0];
+sub revcom_with_flag {
+    my $seq  = $_[0];
     my $flag = $_[1];
-    if ($flag & 16) {
+    if ( $flag & 16 ) {
         $seq = reverse $seq;
-        $seq =~tr/AGCT/TCGA/;
+        $seq =~ tr/AGCT/TCGA/;
     }
     return $seq;
 }
+
 sub read_contig_file {
     my %contigs;
     open( CONTIG_FILE, "<" . $_[0] )
@@ -33,6 +40,24 @@ sub read_contig_file {
     }
     return %contigs;
 }
+
+sub print_status {
+    my $fh = $_[0]; # this has to be checked
+    print $fh "Total: " # especially this when empty
+        . $number_of_reads
+        . "\tGood: "
+        . $number_of_good_reads . " ("
+        . sprintf( '%.2f%%', 100 * $number_of_good_reads / $number_of_reads )
+        . ")\tBad: "
+        . $number_of_bad_reads . " ("
+        . sprintf( '%.2f%%', 100 * $number_of_bad_reads / $number_of_reads )
+        . ")\tHighCov: "
+        . $number_of_high_cov_reads . " ("
+        . sprintf( '%.2f%%',
+        100 * $number_of_high_cov_reads / $number_of_reads )
+        . ")\n";
+}
+
 my %bad_contigs      = &read_contig_file($bad_contigs);
 my %high_cov_contigs = &read_contig_file($high_cov_contigs);
 
@@ -46,44 +71,34 @@ open( HIGHCOV, ">" . $bam_file . "_plus_reads_mapping_high_cov_contigs.txt" )
 open BAM_FILE, "samtools view $bam_file | " or die $!;
 
 my @array;
+
 # @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
 
 while ( my $bam_line = <BAM_FILE> ) {
-    if ( $number_of_reads > 0 && $number_of_reads % 1000000 == 0 ) {
-        print "Total: "
-            . $number_of_reads
-            . "\tGood: "
-            . $number_of_good_reads . " ("
-            . sprintf( '%.2f%%',
-            100 * $number_of_good_reads / $number_of_reads )
-            . ")\tBad: "
-            . $number_of_bad_reads . " ("
-            . sprintf( '%.2f%%',
-            100 * $number_of_bad_reads / $number_of_reads )
-            . ")\tHighCov: "
-            . $number_of_high_cov_reads . " ("
-            . sprintf( '%.2f%%',
-            100 * $number_of_high_cov_reads / $number_of_reads )
-            . ")\n";
+    if ( $number_of_reads % 1000000 == 0 ) {
+        print_status();
     }
     next unless ( $bam_line =~ m/^ERR/ );
     $number_of_reads++;
     my @bam_fields = split /\t/, $bam_line;
     ###########
-    my $read   = $bam_fields[0];
+    my $read = $bam_fields[0];
+
     # my $pair   = substr $read, 0, -1; # for when \1 \2
-    my $pair   = $read;	
+    my $pair     = $read;
     my $bam_flag = $bam_fields[1];
-    my $seq = $bam_fields[9];
-    my $contig = $bam_fields[2];
+    my $seq      = $bam_fields[9];
+    my $contig   = $bam_fields[2];
+
     #if ( $read =~ m/1$/ ) { # when \1 \2
-    if ( $read =~m/^ERR/ ) {
+    if ( $read =~ m/^ERR/ ) {
         push @array, $pair;
         push @array, $read;
         push @array, $contig;
         push @array, $seq;
         push @array, $bam_flag;
     }
+
     #elsif ( $read =~ m/2$/ ) { when \1 \2
     #    push @array, $pair;
     #    push @array, $read;
@@ -95,14 +110,21 @@ while ( my $bam_line = <BAM_FILE> ) {
         print "Warning: $bam_fields[0]\n";
     }
     if ( scalar(@array) >= 10 ) {
-        # print Dumper(\@array); #DEBUGGIN site
-        # @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
-        my $fasta = ">".$array[1]."\n".&revcom_with_flag($array[3], $array[4])."\n>".$array[6]."\n".&revcom_with_flag($array[8], $array[9])."\n";
+
+# print Dumper(\@array); #DEBUGGIN site
+# @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
+        my $fasta
+            = ">"
+            . $array[1] . "\n"
+            . &revcom_with_flag( $array[3], $array[4] ) . "\n>"
+            . $array[6] . "\n"
+            . &revcom_with_flag( $array[8], $array[9] ) . "\n";
         if (   exists( $bad_contigs{ $array[2] . "/" } )
             && exists( $bad_contigs{ $array[7] . "/" } ) )
         {
             # Both contigs are contaminants
             $number_of_bad_reads += 2;
+
             #$bad_contigs{ $array[2] . "/" } = 1;
             #$bad_contigs{ $array[4] . "/" } = 1;
             print BAD $fasta;
@@ -113,6 +135,7 @@ while ( my $bam_line = <BAM_FILE> ) {
         {
             # Both contigs are high coverage
             $number_of_high_cov_reads += 2;
+
             #$high_cov_contigs{ $array[2] . "/" } = 1;
             #$high_cov_contigs{ $array[4] . "/" } = 1;
             print HIGHCOV $fasta;
@@ -132,16 +155,5 @@ close HIGHCOV;
 
 open( LOG, ">" . $bam_file . "_plus_log.txt" )
     || die "Writing " . $bam_file . "_plus_log.txt : No no !\n";
-print LOG "Total: "
-    . $number_of_reads
-    . "\tGood: "
-    . $number_of_good_reads . " ("
-    . sprintf( '%.2f%%', 100 * $number_of_good_reads / $number_of_reads )
-    . ")\tBad: "
-    . $number_of_bad_reads . " ("
-    . sprintf( '%.2f%%', 100 * $number_of_bad_reads / $number_of_reads )
-    . ")\tHighCov: "
-    . $number_of_high_cov_reads . " ("
-    . sprintf( '%.2f%%', 100 * $number_of_high_cov_reads / $number_of_reads )
-    . ")\n";
+print_status(LOG);
 close LOG;
