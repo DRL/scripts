@@ -18,28 +18,28 @@ my $number_of_good_reads     = 0;
 my $number_of_bad_reads      = 0;
 my $number_of_high_cov_reads = 0;
 
-sub revcom_with_flag {
-    my $seq  = $_[0];
-    my $flag = $_[1];
-    if ( $flag & 16 ) {
-        $seq = reverse $seq;
-        $seq =~ tr/AGCT/TCGA/;
-    }
-    return $seq;
-}
-
-# sub read_contig_file {
-#     my %contigs;
-#     open( CONTIG_FILE, "<" . $_[0] )
-#         || die "Reading $_[0] : No no !\n";
-#     while ( my $contig_line = <CONTIG_FILE> ) {
-#         chomp($contig_line);
-#         if ( $contig_line =~ m/contig_/i ) {
-#             $contigs{ $contig_line . "/" } = 0;
-#         }
+# sub revcom_with_flag {
+#     my $seq  = $_[0];
+#     my $flag = $_[1];
+#     if ( $flag & 16 ) {
+#         $seq = reverse $seq;
+#         $seq =~ tr/AGCT/TCGA/;
 #     }
-#     return %contigs;
+#     return $seq;
 # }
+
+sub read_contig_file {
+    my %contigs;
+    open( CONTIG_FILE, "<" . $_[0] )
+        || die "Reading $_[0] : No no !\n";
+    while ( my $contig_line = <CONTIG_FILE> ) {
+        chomp($contig_line);
+        if ( $contig_line =~ m/contig_/i ) {
+            $contigs{ $contig_line . "/" } = 0;
+        }
+    }
+    return %contigs;
+}
 
 my %bad_contigs      = &read_contig_file($bad_contigs);
 my %high_cov_contigs = &read_contig_file($high_cov_contigs);
