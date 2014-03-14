@@ -56,7 +56,7 @@ print(str(len(fasta_dict)) + " contigs in file " + sys.argv[3])
 contaminants = ["Ascomycota", "Bacteroidetes", "Proteobacteria", "Actinobacteria"];
 regions = ['A', 'B', 'C', 'D', 'E']
 min_blast_hit_len = int(sys.argv[4])
-max_blast_hit_eval = float(sys.argv[5])
+max_blast_hit_eval = sys.argv[5]
 high_cov = int(sys.argv[6])
 low_cov = int(sys.argv[7])
 high_gc = 0.7
@@ -115,7 +115,7 @@ for contig in blob_dict:
 	# Annotated contigs
 		# hit_phylum = blob[5], hit_len = blast[3], hit_eval = blast[10]
 		region[contig_dict[contig]]['hits'] += 1
-		if (contig_dict[contig] != "A") and (blob_dict[contig][5] in contaminants) and (int(blast_dict[contig][3]) >= min_blast_hit_len) and (float(blast_dict[contig][10]) <= max_blast_hit_eval):
+		if (contig_dict[contig] != "A") and (blob_dict[contig][5] in contaminants) and (int(blast_dict[contig][3]) >= min_blast_hit_len) and (float(blast_dict[contig][10]) <= float(max_blast_hit_eval)):
 			# Contaminant contigs
 			region[contig_dict[contig]]['bad'] += 1
 			outfile_excluded_fh.write(">" + contig + "\n" + fasta_dict[contig] + "\n")
