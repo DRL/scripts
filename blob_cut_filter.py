@@ -74,12 +74,12 @@ percentage_contigs_with_blast_hits = float(number_of_contigs_with_blast_hits / n
 ###############################################################################
 region = {'A': {'contigs' : 0 , 'hits' : 0,'good' : 0, 'bad' : 0, 'cum_len' : 0}, 'B': {'contigs' : 0 ,'hits' : 0, 'good' : 0,'bad' : 0, 'cum_len' : 0}, 'C': {'contigs' : 0 ,'hits' : 0 ,'good' : 0, 'bad' : 0, 'cum_len' : 0}, 'D': {'contigs' : 0 ,'hits' : 0 ,'good' : 0, 'bad' : 0, 'cum_len' : 0}, 'E': {'contigs' : 0 ,'hits' : 0 ,'good' : 0, 'bad' : 0, 'cum_len' : 0}}
 ###############################################################################
-outfile_high_cov_fh = open (sys.argv[2] + "_high_cov_contigs.fa", "w")
-outfile_included_fh = open (sys.argv[2] + "_included_contigs.fa", "w")
-outfile_excluded_fh = open (sys.argv[2] + "_excluded_contigs.fa", "w")
-outfile_high_cov_txt_fh = open (sys.argv[2] + "_high_cov_contigs.txt", "w")
-outfile_included_txt_fh = open (sys.argv[2] + "_included_contigs.txt", "w")
-outfile_excluded_txt_fh = open (sys.argv[2] + "_excluded_contigs.txt", "w")
+outfile_high_cov_fh = open (sys.argv[2] + ".high.contigs.fa", "w")
+outfile_included_fh = open (sys.argv[2] + ".pass.contigs.fa", "w")
+outfile_excluded_fh = open (sys.argv[2] + ".fail.contigs.fa", "w")
+outfile_high_cov_txt_fh = open (sys.argv[2] + ".high.contigs.txt", "w")
+outfile_included_txt_fh = open (sys.argv[2] + ".pass.contigs.txt", "w")
+outfile_excluded_txt_fh = open (sys.argv[2] + ".fail.contigs.txt", "w")
 
 ###############################################################################
 
