@@ -70,22 +70,7 @@ number_of_contigs = len(blob_dict)
 number_of_contigs_with_blast_hits = len(blast_dict)
 percentage_contigs_with_blast_hits = float(number_of_contigs_with_blast_hits / number_of_contigs)
 ###############################################################################
-# 		cov
-# 		^
-# 		|	  |	   D	|
-#  cov2	+     +---------+
-#		|	  |			|
-#		|   E |	   A	| C
-#		|	  |			|
-#  cov1	+     +---------+
-#		|	  |	   B	|
-#		|-----+---------+----> GC
-#			 GC1       GC2
-# A = [GC1,	GC2,	Cov1,	Cov2 ]
-# B = [GC1, GC2, <= Cov1 ]
-# C = [>= GC2]
-# D = [GC1, GC2, 	>= Cov2]
-# E = [<= GC1]
+
 ###############################################################################
 region = {'A': {'contigs' : 0 , 'hits' : 0,'good' : 0, 'bad' : 0, 'cum_len' : 0}, 'B': {'contigs' : 0 ,'hits' : 0, 'good' : 0,'bad' : 0, 'cum_len' : 0}, 'C': {'contigs' : 0 ,'hits' : 0 ,'good' : 0, 'bad' : 0, 'cum_len' : 0}, 'D': {'contigs' : 0 ,'hits' : 0 ,'good' : 0, 'bad' : 0, 'cum_len' : 0}, 'E': {'contigs' : 0 ,'hits' : 0 ,'good' : 0, 'bad' : 0, 'cum_len' : 0}}
 ###############################################################################
