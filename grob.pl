@@ -58,6 +58,7 @@ my @array;
 # @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
 
 while ( my $bam_line = <BAM_FILE> ) {
+    $number_of_reads++;
     if ( $number_of_reads % 1000000 == 0 ) {
         print "Total: " # especially this when empty
         . $number_of_reads
@@ -74,7 +75,6 @@ while ( my $bam_line = <BAM_FILE> ) {
         . ")\n";
     }
     next unless ( $bam_line =~ m/^ERR/ );
-    $number_of_reads++;
     my @bam_fields = split /\t/, $bam_line;
     ###########
     my $read = $bam_fields[0];
