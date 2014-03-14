@@ -54,7 +54,7 @@ if __name__ == "__main__":
 	blast_C_to_A = read_blast_to_dict(sys.argv[7])
 	blast_B_to_C = read_blast_to_dict(sys.argv[8])
 	blast_C_to_B = read_blast_to_dict(sys.argv[9])
-
+	print blast_A_to_B
 	count_A = len(fasta_A)
 	count_B = len(fasta_B)
 	count_C = len(fasta_C)
