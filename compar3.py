@@ -31,14 +31,13 @@ def read_blast_to_dict (filename):
 	with open(filename) as fh:
 		blast_dict = {}
 		for line in fh:
-			if line.startswith("contig"):
-				temp_list = line.rstrip("\n").rsplit("\t")
-				contig = temp_list[0]
-				hit = temp_list[2]
-				if (contig in blast_dict):
-					pass
-				else:
-					blast_dict[contig] = hit
+			temp_list = line.rstrip("\n").rsplit("\t")
+			contig = temp_list[0]
+			hit = temp_list[2]
+			if (contig in blast_dict):
+				pass
+			else:
+				blast_dict[contig] = hit
 	return blast_dict
 
 if __name__ == "__main__":
