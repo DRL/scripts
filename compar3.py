@@ -42,9 +42,12 @@ def read_blast_to_dict (filename):
 	return blast_dict
 
 if __name__ == "__main__":
-	fasta_A = read_fasta_to_dict(sys.argv[1])
-	fasta_B = read_fasta_to_dict(sys.argv[2])
-	fasta_C = read_fasta_to_dict(sys.argv[3])
+	file_A = sys.argv[1]
+	file_B = sys.argv[2]
+	file_C = sys.argv[3]
+	fasta_A = read_fasta_to_dict(file_A)
+	fasta_B = read_fasta_to_dict(file_B)
+	fasta_C = read_fasta_to_dict(file_C)
 	blast_A_to_B = read_blast_to_dict(sys.argv[4])
 	blast_B_to_A = read_blast_to_dict(sys.argv[5])
 	blast_A_to_C = read_blast_to_dict(sys.argv[6])
@@ -77,33 +80,33 @@ if __name__ == "__main__":
 	C_not_in_B = 0
 
 	for read in fasta_A:
-		if read in A_hits_B:
+		if read in blast_A_to_B:
 			A_in_B += 1
 		else:
 			A_not_in_B += 1
-		if read in A_hits_C:
+		if read in blast_A_to_C:
 			A_in_C += 1
 		else:
 			A_not_in_C += 1
 	for read in fasta_B:
-		if read in B_hits_A:
+		if read in blast_B_to_A:
 			B_in_A
 		else:
 			B_not_in_A += 1
-		if read in B_hits_C:
+		if read in blast_B_to_C:
 			B_in_C
 		else:
 			B_not_in_C += 1
 	for read in fasta_C:
-		if read in C_hits_A:
+		if read in blast_C_to_A:
 			C_in_A
 		else:
 			C_not_in_A += 1
-		if read in C_hits_B:
+		if read in blast_C_to_B:
 			C_in_B
 		else:
 			C_not_in_B += 1
-
+	print "A = " + file_A + ", B = " + file_B + "C = " + file_C
 	print "A : " + str(count_A)
 	print "B : " + str(count_B)
 	print "C : " + str(count_C)
