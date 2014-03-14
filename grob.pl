@@ -41,9 +41,25 @@ sub read_contig_file {
     return %contigs;
 }
 
-sub print_status {
-    my $fh = $_[0]; # this has to be checked
-    print $fh "Total: " # especially this when empty
+my %bad_contigs      = &read_contig_file($bad_contigs);
+my %high_cov_contigs = &read_contig_file($high_cov_contigs);
+
+open( PASS, ">" . $bam_file . ".pass.txt" )
+    || die "Writing $bam_file.pass.txt : No no !\n";
+open( FAIL, ">" . $bam_file . ".fail.txt" )
+    || die "Writing $bad_contigs.fail.txt : No no !\n";
+open( HIGH, ">" . $bam_file . ".high.txt" )
+    || die "Writing $high_cov_contigs.high.txt : No no !\n";
+
+open BAM_FILE, "samtools view $bam_file | " or die $!;
+
+my @array;
+
+# @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
+
+while ( my $bam_line = <BAM_FILE> ) {
+    if ( $number_of_reads % 1000000 == 0 ) {
+        print "Total: " # especially this when empty
         . $number_of_reads
         . "\tGood: "
         . $number_of_good_reads . " ("
@@ -56,27 +72,6 @@ sub print_status {
         . sprintf( '%.2f%%',
         100 * $number_of_high_cov_reads / $number_of_reads )
         . ")\n";
-}
-
-my %bad_contigs      = &read_contig_file($bad_contigs);
-my %high_cov_contigs = &read_contig_file($high_cov_contigs);
-
-open( GOOD, ">" . $bam_file . ".pass.txt" )
-    || die "Writing $bam_file.pass.txt : No no !\n";
-open( BAD, ">" . $bam_file . ".fail.txt" )
-    || die "Writing $bad_contigs.fail.txt : No no !\n";
-open( HIGHCOV, ">" . $bam_file . ".high.txt" )
-    || die "Writing $high_cov_contigs.high.txt : No no !\n";
-
-open BAM_FILE, "samtools view $bam_file | " or die $!;
-
-my @array;
-
-# @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
-
-while ( my $bam_line = <BAM_FILE> ) {
-    if ( $number_of_reads % 1000000 == 0 ) {
-        print_status();
     }
     next unless ( $bam_line =~ m/^ERR/ );
     $number_of_reads++;
@@ -129,7 +124,7 @@ while ( my $bam_line = <BAM_FILE> ) {
 
             #$bad_contigs{ $array[2] . "/" } = 1;
             #$bad_contigs{ $array[4] . "/" } = 1;
-            print BAD $fasta;
+            print FAIL $fasta;
             @array = ();
         }
         elsif (exists( $high_cov_contigs{ $array[2] . "/" } )
@@ -140,22 +135,34 @@ while ( my $bam_line = <BAM_FILE> ) {
 
             #$high_cov_contigs{ $array[2] . "/" } = 1;
             #$high_cov_contigs{ $array[4] . "/" } = 1;
-            print HIGHCOV $fasta;
+            print HIGH $fasta;
             @array = ();
         }
         else {
             $number_of_good_reads += 2;
-            print GOOD $fasta;
+            print PASS $fasta;
             @array = ();
         }
     }
 }
 close BAM_FILE;
-close GOOD;
-close BAD;
-close HIGHCOV;
+close PASS;
+close FAIL;
+close HIGH;
 
 open( LOG, ">" . $bam_file . ".log.txt" )
     || die "Writing " . $bam_file . ".log.txt : No no !\n";
-print_status(LOG);
+print LOG "Total: " # especially this when empty
+        . $number_of_reads
+        . "\tGood: "
+        . $number_of_good_reads . " ("
+        . sprintf( '%.2f%%', 100 * $number_of_good_reads / $number_of_reads )
+        . ")\tBad: "
+        . $number_of_bad_reads . " ("
+        . sprintf( '%.2f%%', 100 * $number_of_bad_reads / $number_of_reads )
+        . ")\tHighCov: "
+        . $number_of_high_cov_reads . " ("
+        . sprintf( '%.2f%%',
+        100 * $number_of_high_cov_reads / $number_of_reads )
+        . ")\n";
 close LOG;
