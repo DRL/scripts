@@ -7,15 +7,7 @@
 from __future__ import division
 import sys
 ###############################################################################
-contaminants = ["Ascomycota", "Bacteroidetes", "Proteobacteria", "Actinobacteria"];
-regions = ['A', 'B', 'C', 'D', 'E']
-min_blast_hit_len = 100
-max_blast_hit_eval = 1e-50
-high_cov = 200
-low_cov = 10
-high_gc = 0.7
-low_gc = 0.0
-contig_dict = {}
+
 ###############################################################################
 def read_blob_to_dict(filename):
 	with open(filename) as fh:
@@ -65,6 +57,15 @@ blast_dict = read_blast_to_dict(sys.argv[1])
 blob_dict = read_blob_to_dict(sys.argv[2])
 fasta_dict = read_fasta_to_dict(sys.argv[3])
 print(str(len(fasta_dict)) + " contigs in file " + sys.argv[3])
+contaminants = ["Ascomycota", "Bacteroidetes", "Proteobacteria", "Actinobacteria"];
+regions = ['A', 'B', 'C', 'D', 'E']
+min_blast_hit_len = int(sys.argv[4])
+max_blast_hit_eval = float(sys.argv[5])
+high_cov = int(sys.argv[6])
+low_cov = int(sys.argv[7])
+high_gc = 0.7
+low_gc = 0.0
+contig_dict = {}
 ###############################################################################
 number_of_contigs = len(blob_dict)
 number_of_contigs_with_blast_hits = len(blast_dict)
