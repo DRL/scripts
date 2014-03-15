@@ -97,11 +97,11 @@ if __name__ == "__main__":
 			B_not_in_C += 1
 	for read in fasta_C:
 		if read in blast_C_to_A:
-			C_in_A
+			C_in_A += 1
 		else:
 			C_not_in_A += 1
 		if read in blast_C_to_B:
-			C_in_B
+			C_in_B += 1
 		else:
 			C_not_in_B += 1
 	print "A = " + file_A + ", B = " + file_B + ", C = " + file_C
