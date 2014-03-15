@@ -109,7 +109,6 @@ if __name__ == "__main__":
 		else:
 			A_.write(">" + read + "\n" + fasta_A[read] + "\n")	
 	for read in fasta_B:
-		read += ".gros.rsem"
 		if (read in blast_B_to_A) and (read in blast_B_to_C):
 			B_AC.write(">" + read + "\n" + fasta_B[read] + "\n")
 		elif(read in blast_B_to_A):
@@ -119,7 +118,6 @@ if __name__ == "__main__":
 		else:
 			B_.write(">" + read + "\n" + fasta_B[read] + "\n")	
 	for read in fasta_C:
-		read += ".gros.no_rsem"
 		if (read in blast_C_to_A) and (read in blast_C_to_B):
 			C_AB.write(">" + read + "\n" + fasta_C[read] + "\n")
 		elif(read in blast_C_to_A):
