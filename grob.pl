@@ -56,10 +56,16 @@ open BAM_FILE, "samtools view $bam_file | " or die $!;
 my @array;
 
 # @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
+my $high = '';
+my $pass = '';
+my $fail = '';
 
 while ( my $bam_line = <BAM_FILE> ) {
     $number_of_reads++;
     if ( $number_of_reads % 1000000 == 0 ) {
+        print FAIL $fasta;
+        print HIGH $fasta;
+        print PASS $fasta;
         print "Total: " # especially this when empty
         . $number_of_reads
         . "\tGood: "
@@ -124,7 +130,7 @@ while ( my $bam_line = <BAM_FILE> ) {
 
             #$bad_contigs{ $array[2] . "/" } = 1;
             #$bad_contigs{ $array[4] . "/" } = 1;
-            print FAIL $fasta;
+            $fail .= $fasta;
             @array = ();
         }
         elsif (exists( $high_cov_contigs{ $array[2] . "/" } )
@@ -135,12 +141,12 @@ while ( my $bam_line = <BAM_FILE> ) {
 
             #$high_cov_contigs{ $array[2] . "/" } = 1;
             #$high_cov_contigs{ $array[4] . "/" } = 1;
-            print HIGH $fasta;
+            $high .= $fasta;
             @array = ();
         }
         else {
             $number_of_good_reads += 2;
-            print PASS $fasta;
+            $pass .= $fasta;
             @array = ();
         }
     }
