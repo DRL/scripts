@@ -59,7 +59,7 @@ my @array;
 my $high = '';
 my $pass = '';
 my $fail = '';
-
+my $fasta = '';
 while ( my $bam_line = <BAM_FILE> ) {
     $number_of_reads++;
     if ( $number_of_reads % 1000000 == 0 ) {
@@ -114,7 +114,7 @@ while ( my $bam_line = <BAM_FILE> ) {
 
 # print Dumper(\@array); #DEBUGGIN site
 # @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
-        my $fasta
+        $fasta
             = ">"
             . $array[1] . "\n"
             . $array[3] . "\n>"
