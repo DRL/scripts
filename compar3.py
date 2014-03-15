@@ -19,7 +19,8 @@ def read_fasta_to_dict (filename):
 		for line in fh:
 		    line = line.rstrip("\n")
 		    if line.startswith(">"):
-		        fasta_dict[contig] = seq
+		    	if (contig):
+		        	fasta_dict[contig] = seq
 		        seq = ''
 		        contig = line[1:]
 		    else:
