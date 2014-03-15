@@ -86,6 +86,8 @@ if __name__ == "__main__":
 	# - All sequences in C that hit B 		: no_rsem in rsem
 	# - All sequences in C alone
 
+	print fasta_A
+	
 	A_BC = open ("set_" + file_A + "_" + file_B + "_" + file_C + ".fa", "w")
 	A_B = open ("set_" + file_A + "_" + file_B + ".fa", "w")
 	A_C = open ("set_" + file_A + "_" + file_C + ".fa", "w")
