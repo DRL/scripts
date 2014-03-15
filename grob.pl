@@ -63,9 +63,12 @@ my $fasta = '';
 while ( my $bam_line = <BAM_FILE> ) {
     $number_of_reads++;
     if ( $number_of_reads % 1000000 == 0 ) {
-        print FAIL $fasta;
-        print HIGH $fasta;
-        print PASS $fasta;
+        print FAIL $fail;
+        print HIGH $high;
+        print PASS $pass;
+        $fail = ''
+        $high = ''
+        $pass = ''
         print "Total: " # especially this when empty
         . $number_of_reads
         . "\tGood: "
@@ -114,7 +117,7 @@ while ( my $bam_line = <BAM_FILE> ) {
 
 # print Dumper(\@array); #DEBUGGIN site
 # @array : pair, read1, contig1, bam_flag1, seq1, read2, contig2, bam_flag2, seq2
-        $fasta
+        my $fasta
             = ">"
             . $array[1] . "\n"
             . $array[3] . "\n>"
