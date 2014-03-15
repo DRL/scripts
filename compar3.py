@@ -53,92 +53,78 @@ if __name__ == "__main__":
 	blast_C_to_A = read_blast_to_dict(sys.argv[7])
 	blast_B_to_C = read_blast_to_dict(sys.argv[8])
 	blast_C_to_B = read_blast_to_dict(sys.argv[9])
-	
-	hits = {}
 
-	count_A = len(fasta_A)
-	count_B = len(fasta_B)
-	count_C = len(fasta_C)
+	count_A = len(fasta_A) # Number of sequences in A
+	count_B = len(fasta_B) # Number of sequences in B
+	count_C = len(fasta_C) # Number of sequences in C
 
-	A_hits_B = len(blast_A_to_B)
-	B_hits_A = len(blast_B_to_A)
-	A_hits_C = len(blast_A_to_C)
-	C_hits_A = len(blast_C_to_A)
-	B_hits_C = len(blast_B_to_C)
-	C_hits_B = len(blast_C_to_B)
+	A_hitting_B = len(blast_A_to_B) # Number of sequences in A hitting B
+	B_hitting_A = len(blast_B_to_A) # Number of sequences in B hitting A
+	A_hitting_C = len(blast_A_to_C) # Number of sequences in A hitting C
+	C_hitting_A = len(blast_C_to_A) # Number of sequences in C hitting A
+	B_hitting_C = len(blast_B_to_C) # Number of sequences in B hitting C
+	C_hitting_B = len(blast_C_to_B) # Number of sequences in C hitting B
 
-	A_in_B = 0
-	A_not_in_B = 0
-	A_in_C = 0
-	A_not_in_C = 0
-	B_in_A = 0
-	B_not_in_A = 0
-	B_in_C = 0
-	B_not_in_C = 0
-	C_in_A = 0
-	C_not_in_A = 0
-	C_in_B = 0
-	C_not_in_B = 0
-	# make an array to hold group membership
+	print "A_hitting_B " + str(A_hitting_B)
+	print "B_hitting_A " + str(B_hitting_A)
+	print "A_hitting_C " + str(A_hitting_C)
+	print "C_hitting_A " + str(C_hitting_A)
+	print "B_hitting_C " + str(B_hitting_C)
+	print "C_hitting_B " + str(C_hitting_B)
+
+	# Make files containing sequences that:
+	# - All sequences in A that hit B and C : Gpal in rsem and no_rsem
+	# - All sequences in A that hit B  		: Gpal only in rsem
+	# - All sequences in A that hit C       : Gpal only in no_rsem
+	# - All sequences in A alone
+	# - All sequences in B that hit A and C : rsem in Gpal and no_rsem
+	# - All sequences in B that hit A   	: rsem only in Gpal
+	# - All sequences in B that hit C   	: rsem only in no_rsem
+	# - All sequences in B alone
+	# - All sequences in C that hit A and B : no_rsem in Gpal and rsem
+	# - All sequences in C that hit A       : no_rsem in Gpal
+	# - All sequences in C that hit B 		: no_rsem in rsem
+	# - All sequences in C alone
+
+	A_BC = open ("set_" + file_A + file_B + file_C + ".fa", "w")
+	A_B = open ("set_" + file_A + file_B + ".fa", "w")
+	A_C = open ("set_" + file_A + file_C + ".fa", "w")
+	A_ = open ("set_" + file_A + ".fa", "w")
+	B_AC = open ("set_" + file_B + file_A + file_C + ".fa", "w")
+	B_A = open ("set_" + file_B + file_A + ".fa", "w")
+	B_C = open ("set_" + file_B + file_C + ".fa", "w")
+	B_ = open ("set_" + file_B + ".fa", "w")
+	C_AB = open ("set_" + file_C + file_A + file_B + ".fa", "w")
+	C_A = open ("set_" + file_C + file_A + ".fa", "w")
+	C_B = open ("set_" + file_C + file_B + ".fa", "w")
+	C_ = open ("set_" + file_C + ".fa", "w")
+
 	for read in fasta_A:
-		hits[read]=["A"]
-		if read in blast_A_to_B:
-			hits[read].append("B")
-			#A_in_B += 1
+		if (read in blast_A_to_B) and (read in blast_A_to_C):
+			A_BC.write(">" + read + "\n" + fasta_A[read] + "\n")
+		elif(read in blast_A_to_B):
+			A_B.write(">" + read + "\n" + fasta_A[read] + "\n")
+		elif(read in blast_A_to_C):
+			A_C.write(">" + read + "\n" + fasta_A[read] + "\n")	
 		else:
-			A_not_in_B += 1
-		if read in blast_A_to_C:
-			hits[read].append("C")
-			#A_in_C += 1
-		else:
-			A_not_in_C += 1
+			A_.write(">" + read + "\n" + fasta_A[read] + "\n")	
 	for read in fasta_B:
 		read += ".gros.rsem"
-		hits[read]=["B"]
-		if read in blast_B_to_A:
-			hits[read].append("A")
-			#B_in_A += 1
+		if (read in blast_B_to_A) and (read in blast_B_to_C):
+			B_AC.write(">" + read + "\n" + fasta_B[read] + "\n")
+		elif(read in blast_B_to_A):
+			B_A.write(">" + read + "\n" + fasta_B[read] + "\n")
+		elif(read in blast_B_to_C):
+			B_C.write(">" + read + "\n" + fasta_B[read] + "\n")	
 		else:
-			B_not_in_A += 1
-		if read in blast_B_to_C:
-			hits[read].append("C")
-			#B_in_C += 1
-		else:
-			B_not_in_C += 1
+			B_.write(">" + read + "\n" + fasta_B[read] + "\n")	
 	for read in fasta_C:
 		read += ".gros.no_rsem"
-		hits[read]=["C"]
-		if read in blast_C_to_A:
-			#C_in_A += 1
-			hits[read].append("A")
+		if (read in blast_C_to_A) and (read in blast_C_to_B):
+			C_AB.write(">" + read + "\n" + fasta_C[read] + "\n")
+		elif(read in blast_C_to_A):
+			C_A.write(">" + read + "\n" + fasta_C[read] + "\n")
+		elif(read in blast_C_to_B):
+			C_B.write(">" + read + "\n" + fasta_C[read] + "\n")	
 		else:
-			C_not_in_A += 1
-		if read in blast_C_to_B:
-			hits[read].append("B")
-			#C_in_B += 1
-		else:
-			C_not_in_B += 1
-	print "A = " + file_A + ", B = " + file_B + ", C = " + file_C
-	print "A : " + str(count_A)
-	print "B : " + str(count_B)
-	print "C : " + str(count_C)
-	# print "A_in_B " + str(A_in_B)
-	# print "A_not_in_B " + str(A_not_in_B)
-	# print "A_in_C " + str(A_in_C)
-	# print "A_not_in_C " + str(A_not_in_C)
-	# print "B_in_A " + str(B_in_A)
-	# print "B_not_in_A " + str(B_not_in_A)
-	# print "B_in_C " + str(B_in_C)
-	# print "B_not_in_C " + str(B_not_in_C)
-	# print "C_in_A " + str(C_in_A)
-	# print "C_not_in_A " + str(C_not_in_A)
-	# print "C_in_B " + str(C_in_B)
-	# print "C_not_in_B " + str(C_not_in_B)
-
-	print hits 
-	print "A_hits_B " + str(A_hits_B)
-	print "B_hits_A " + str(B_hits_A)
-	print "A_hits_C " + str(A_hits_C)
-	print "C_hits_A " + str(C_hits_A)
-	print "B_hits_C " + str(B_hits_C)
-	print "C_hits_B " + str(C_hits_B)
+			C_.write(">" + read + "\n" + fasta_C[read] + "\n")	
