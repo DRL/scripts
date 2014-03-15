@@ -62,7 +62,7 @@ my $fail = '';
 my $fasta = '';
 while ( my $bam_line = <BAM_FILE> ) {
     $number_of_reads++;
-    if ( $number_of_reads % 1000000 == 0 ) {
+    if ( $number_of_reads % 10000000 == 0 ) {
         print FAIL $fail;
         print HIGH $high;
         print PASS $pass;
