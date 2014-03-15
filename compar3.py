@@ -15,13 +15,13 @@ def read_fasta_to_dict (filename):
 	with open(filename) as fh:
 		fasta_dict = {}
 		# contig = ''
-		# seq = ''
+		#seq = ''
 		for line in fh:
 		    line = line.rstrip("\n")
 		    if line.startswith(">"):
+		    	contig = line[1:]
+		    	seq = ''
 		        fasta_dict[contig] = seq
-		        seq = ''
-		        contig = line[1:]
 		    else:
 		        seq += line
 		fasta_dict[contig] = seq
