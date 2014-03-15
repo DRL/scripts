@@ -66,9 +66,9 @@ while ( my $bam_line = <BAM_FILE> ) {
         print FAIL $fail;
         print HIGH $high;
         print PASS $pass;
-        $fail = ''
-        $high = ''
-        $pass = ''
+        $fail = '';
+        $high = '';
+        $pass = '';
         print "Total: " # especially this when empty
         . $number_of_reads
         . "\tGood: "
