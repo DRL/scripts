@@ -86,7 +86,7 @@ if __name__ == "__main__":
 			A_in_C += 1
 		else:
 			A_not_in_C += 1
-	for read in fasta_B:
+	for read + ".gros.rsem" in fasta_B:
 		if read in blast_B_to_A:
 			B_in_A += 1
 		else:
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 			B_in_C += 1
 		else:
 			B_not_in_C += 1
-	for read in fasta_C:
+	for read + ".gros.no_rsem" in fasta_C:
 		if read in blast_C_to_A:
 			C_in_A += 1
 		else:
