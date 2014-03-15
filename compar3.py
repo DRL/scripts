@@ -86,17 +86,17 @@ if __name__ == "__main__":
 	# - All sequences in C that hit B 		: no_rsem in rsem
 	# - All sequences in C alone
 
-	A_BC = open ("set_" + file_A + file_B + file_C + ".fa", "w")
-	A_B = open ("set_" + file_A + file_B + ".fa", "w")
-	A_C = open ("set_" + file_A + file_C + ".fa", "w")
+	A_BC = open ("set_" + file_A + "_" + file_B + "_" + file_C + ".fa", "w")
+	A_B = open ("set_" + file_A + "_" + file_B + ".fa", "w")
+	A_C = open ("set_" + file_A + "_" + file_C + ".fa", "w")
 	A_ = open ("set_" + file_A + ".fa", "w")
-	B_AC = open ("set_" + file_B + file_A + file_C + ".fa", "w")
-	B_A = open ("set_" + file_B + file_A + ".fa", "w")
-	B_C = open ("set_" + file_B + file_C + ".fa", "w")
+	B_AC = open ("set_" + file_B +"_" + file_A +"_" + file_C + ".fa", "w")
+	B_A = open ("set_" + file_B + "_" +file_A + ".fa", "w")
+	B_C = open ("set_" + file_B +"_" + file_C + ".fa", "w")
 	B_ = open ("set_" + file_B + ".fa", "w")
-	C_AB = open ("set_" + file_C + file_A + file_B + ".fa", "w")
-	C_A = open ("set_" + file_C + file_A + ".fa", "w")
-	C_B = open ("set_" + file_C + file_B + ".fa", "w")
+	C_AB = open ("set_" + file_C +"_" + file_A + "_" +file_B + ".fa", "w")
+	C_A = open ("set_" + file_C +"_" + file_A + ".fa", "w")
+	C_B = open ("set_" + file_C +"_" + file_B + ".fa", "w")
 	C_ = open ("set_" + file_C + ".fa", "w")
 
 	for read in fasta_A:
