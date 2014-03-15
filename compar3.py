@@ -53,6 +53,9 @@ if __name__ == "__main__":
 	blast_C_to_A = read_blast_to_dict(sys.argv[7])
 	blast_B_to_C = read_blast_to_dict(sys.argv[8])
 	blast_C_to_B = read_blast_to_dict(sys.argv[9])
+	
+	hits = {}
+
 	count_A = len(fasta_A)
 	count_B = len(fasta_B)
 	count_C = len(fasta_C)
@@ -76,53 +79,63 @@ if __name__ == "__main__":
 	C_not_in_A = 0
 	C_in_B = 0
 	C_not_in_B = 0
-
+	# make an array to hold group membership
 	for read in fasta_A:
+		hits[read]=["A"]
 		if read in blast_A_to_B:
-			A_in_B += 1
+			hits[read].append("B")
+			#A_in_B += 1
 		else:
 			A_not_in_B += 1
 		if read in blast_A_to_C:
-			A_in_C += 1
+			hits[read].append("C")
+			#A_in_C += 1
 		else:
 			A_not_in_C += 1
 	for read in fasta_B:
 		read += ".gros.rsem"
+		hits[read]=["B"]
 		if read in blast_B_to_A:
-			B_in_A += 1
+			hits[read].append("A")
+			#B_in_A += 1
 		else:
 			B_not_in_A += 1
 		if read in blast_B_to_C:
-			B_in_C += 1
+			hits[read].append("C")
+			#B_in_C += 1
 		else:
 			B_not_in_C += 1
 	for read in fasta_C:
 		read += ".gros.no_rsem"
+		hits[read]=["C"]
 		if read in blast_C_to_A:
-			C_in_A += 1
+			#C_in_A += 1
+			hits[read].append("A")
 		else:
 			C_not_in_A += 1
 		if read in blast_C_to_B:
-			C_in_B += 1
+			hits[read].append("B")
+			#C_in_B += 1
 		else:
 			C_not_in_B += 1
 	print "A = " + file_A + ", B = " + file_B + ", C = " + file_C
 	print "A : " + str(count_A)
 	print "B : " + str(count_B)
 	print "C : " + str(count_C)
-	print "A_in_B " + str(A_in_B)
-	print "A_not_in_B " + str(A_not_in_B)
-	print "A_in_C " + str(A_in_C)
-	print "A_not_in_C " + str(A_not_in_C)
-	print "B_in_A " + str(B_in_A)
-	print "B_not_in_A " + str(B_not_in_A)
-	print "B_in_C " + str(B_in_C)
-	print "B_not_in_C " + str(B_not_in_C)
-	print "C_in_A " + str(C_in_A)
-	print "C_not_in_A " + str(C_not_in_A)
-	print "C_in_B " + str(C_in_B)
-	print "C_not_in_B " + str(C_not_in_B)
+	# print "A_in_B " + str(A_in_B)
+	# print "A_not_in_B " + str(A_not_in_B)
+	# print "A_in_C " + str(A_in_C)
+	# print "A_not_in_C " + str(A_not_in_C)
+	# print "B_in_A " + str(B_in_A)
+	# print "B_not_in_A " + str(B_not_in_A)
+	# print "B_in_C " + str(B_in_C)
+	# print "B_not_in_C " + str(B_not_in_C)
+	# print "C_in_A " + str(C_in_A)
+	# print "C_not_in_A " + str(C_not_in_A)
+	# print "C_in_B " + str(C_in_B)
+	# print "C_not_in_B " + str(C_not_in_B)
 
+	print hits 
 	print "A_hits_B " + str(A_hits_B)
 	print "B_hits_A " + str(B_hits_A)
 	print "A_hits_C " + str(A_hits_C)
