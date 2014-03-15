@@ -83,6 +83,9 @@ while ( my $bam_line = <BAM_FILE> ) {
         100 * $number_of_high_cov_reads / $number_of_reads )
         . ")\n";
     }
+    if ( $number_of_reads % 16000000 == 0 ) {
+        die;
+    }
     next unless ( $bam_line =~ m/^ERR/ );
     my @bam_fields = split /\t/, $bam_line;
     ###########
