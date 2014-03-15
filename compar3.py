@@ -20,8 +20,8 @@ def read_fasta_to_dict (filename):
 		    line = line.rstrip("\n")
 		    if line.startswith(">"):
 		        fasta_dict[contig] = seq
-		        contig = line[1:]
 		        seq = ''
+		        contig = line[1:]
 		    else:
 		        seq += line
 		fasta_dict[contig] = seq
