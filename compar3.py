@@ -88,11 +88,11 @@ if __name__ == "__main__":
 			A_not_in_C += 1
 	for read in fasta_B:
 		if read in blast_B_to_A:
-			B_in_A
+			B_in_A += 1
 		else:
 			B_not_in_A += 1
 		if read in blast_B_to_C:
-			B_in_C
+			B_in_C += 1
 		else:
 			B_not_in_C += 1
 	for read in fasta_C:
