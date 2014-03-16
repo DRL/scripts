@@ -44,11 +44,11 @@ sub read_contig_file {
 my %bad_contigs      = &read_contig_file($bad_contigs);
 my %high_cov_contigs = &read_contig_file($high_cov_contigs);
 
-open( PASS, ">" . $bam_file . ".pass.txt.new" )
+open( PASS, ">" . $bam_file . ".pass.txt" )
     || die "Writing $bam_file.pass.txt : No no !\n";
-open( FAIL, ">" . $bam_file . ".fail.txt.new" )
+open( FAIL, ">" . $bam_file . ".fail.txt" )
     || die "Writing $bad_contigs.fail.txt : No no !\n";
-open( HIGH, ">" . $bam_file . ".high.txt.new" )
+open( HIGH, ">" . $bam_file . ".high.txt" )
     || die "Writing $high_cov_contigs.high.txt : No no !\n";
 
 open BAM_FILE, "samtools view $bam_file | " or die $!;
@@ -159,7 +159,7 @@ close PASS;
 close FAIL;
 close HIGH;
 
-open( LOG, ">" . $bam_file . ".log.txt.new" )
+open( LOG, ">" . $bam_file . ".log.txt" )
     || die "Writing " . $bam_file . ".log.txt : No no !\n";
 print LOG "Total: " # especially this when empty
         . $number_of_reads
