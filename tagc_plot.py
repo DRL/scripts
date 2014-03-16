@@ -116,7 +116,7 @@ if __name__ == "__main__":
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	# Setting up plots and axes
-	plt.figure(1, figsize=(20,20))
+	plt.figure(1, figsize=(20,20), dpi=300)
 	axScatter = plt.axes(rect_scatter, axisbg=background_grey, yscale = 'log')
 	plt.suptitle(blob_file, fontsize=25, verticalalignment='bottom')
 	axScatter.set_xlabel("GC", fontsize=25)
