@@ -6,6 +6,7 @@ from matplotlib import cm
 from matplotlib.ticker import NullFormatter
 from matplotlib.ticker import FuncFormatter
 import sys
+import operator
 
 def to_percent(y, position):
     # Ignore the passed in position. This has the effect of scaling the default
@@ -27,7 +28,7 @@ background_grey = '#F0F0F5'
 white = '#ffffff'
 nullfmt = NullFormatter()
 colormap = 'Set2'
-blobplots = 2
+blobplots = 3
 blue = '#8da0cb'
 red = '#fa8e63'
 green = '#a7d854'
@@ -45,18 +46,22 @@ i=0
 for name in name_of_set:
 	ax = list_of_ax[i]
 	y_pos = np.arange(blobplots)
-	reads_pass = list(data[i])[0:2]
-	reads_fail = list(data[i])[3:5]
-	reads_high = list(data[i])[6:8]
+	reads_pass = list(data[i])[0:3]
+	reads_fail = list(data[i])[3:6]
+	reads_high = list(data[i])[6:9]
 	A = reads_pass
-	B = np.add(reads_pass, reads_fail)
-	C = np.add(B, reads_high)
+	#B = np.add(reads_pass, reads_fail)
+	B = map(operator.add, A, reads_fail)
+	# B= np.sum([A, reads_fail], axis=0)
+	#C = np.add(B, reads_high)
+	#C = np.sum([B, reads_high], axis=0)
+	C = map(operator.add, B, reads_high)
 	label_B = 'FAIL'
 	label_C = 'HIGH'
 	label_A = 'PASS'
-	ax.barh(y_pos, C, align='center', color=grey, lw = 0.5, edgecolor=white, label=label_C)
-	ax.barh(y_pos, B, align='center', color=almost_black, lw = 0.5, edgecolor=white, label=label_B)
-	ax.barh(y_pos, A, align='center', color=green, lw = 0.5, edgecolor=white, label=label_A)
+	ax.barh(y_pos, C, color=grey, lw = 0.5, edgecolor=white, label=label_C)
+	ax.barh(y_pos, B, color=almost_black, lw = 0.5, edgecolor=white, label=label_B)
+	ax.barh(y_pos, A, color=green, lw = 0.5, edgecolor=white, label=label_A)
 	ax.set_xlim(0.75, 1)
 	ax.get_yaxis().set_ticks([])
 	ax.set_ylabel(name, rotation=0, verticalalignment='center', horizontalalignment ='right' )
