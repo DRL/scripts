@@ -116,7 +116,7 @@ if __name__ == "__main__":
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	# Setting up plots and axes
-	plt.figure(1, figsize=(20,20), dpi=300)
+	plt.figure(1, figsize=(20,20), dpi=400)
 	axScatter = plt.axes(rect_scatter, axisbg=background_grey, yscale = 'log')
 	plt.suptitle(blob_file, fontsize=25, verticalalignment='bottom')
 	axScatter.set_xlabel("GC", fontsize=25)
@@ -172,7 +172,7 @@ if __name__ == "__main__":
 			axScatter.legend(loc=1, fontsize=25, scatterpoints=1)
 			i += 1
 			if (multi_plot): # MULTI-PLOT!!!
-				plt.savefig(out_file, format=fig_format)
+				plt.savefig(out_file + "_" + phylum, format=fig_format)
 			print " [Done]"
 		else:
 			break
