@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-# File   : tagc_plot.py
-# Author : Dominik R. Laetsch, dominik.laetsch at gmail dot com 
-# Bugs : the blobplot parser doesn't like '#' in fields
+"""
+File   : tagc_plot.py
+Author : Dominik R. Laetsch, dominik.laetsch at gmail dot com 
+Bugs : the blobplot parser doesn't like '#' in fields
+"""
 # # # # # 
 # MODULES										
 # # # # # 
@@ -21,7 +23,7 @@ import sys, argparse, os
 # # # # # # 
 
 def check_file(infile):
-	# Checks for existence of file
+	"""Checks for existence of file."""
 	if not os.path.exists(infile):
 		parser.error("The file %s does not exist!"%infile)
 	else:
@@ -76,7 +78,7 @@ if __name__ == "__main__":
 	multi_plot = args.m
 	colormap = args.cm # one should validate this ...
 	max_phylum_plot, fig_format, tax_level = check_parameters(args.p, args.f, args.t)
-	out_file = blob_file + str(".") + str(fig_format) 
+	out_file = blob_file + "." + str(fig_format) 
 
 	# # # # # # 
 	# CONSTANTS	
@@ -155,6 +157,7 @@ if __name__ == "__main__":
 			sys.stdout.write("\t" + phylum)
 			x_i = x[cond]
 			y_i = y[cond]
+			# make dict of colors of phyla if color not in color of phyla go else new color
 			hex_color = mat.colors.rgb2hex(colors(1.0 * (i/max_phylum_plot)))
 			if phylum != 'Not annotated':
 				s = 65
