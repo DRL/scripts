@@ -32,7 +32,7 @@ def check_file(infile):
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 def check_parameters(p, f, t):
-	# Validates and returns values for window size and minimum region length.
+	"""Validates and returns values for number of phyla to plot, output format and tax level."""
 	if (p < 1):
 		parser.error("Specify the number of phyla to plot !")
 	elif (f != 'png' and f != 'pdf'):
@@ -44,14 +44,15 @@ def check_parameters(p, f, t):
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-def get_phylum_count(tax_list):
-	phylum_count = {}
+def get_tax_level_count(tax_list):
+	"""Calculates the count at a given tax level"""
+	tax_level_count = {}
 	for phylum in tax_list:
-   		if phylum in phylum_count:
-   			phylum_count[phylum] += 1
+   		if phylum in tax_level_count:
+   			tax_level_count[phylum] += 1
    		else:
-   	 		phylum_count[phylum] = 1
-   	return phylum_count
+   	 		tax_level_count[phylum] = 1
+   	return tax_level_count
 
 
 if __name__ == "__main__":
@@ -102,8 +103,8 @@ if __name__ == "__main__":
 	tax_key = blob_data.dtype.names[7-tax_level]
 	x, y, phy = blob_data[gc_key], blob_data[cov_key], blob_data[tax_key]
 
-	phylum_count=get_phylum_count(blob_data[tax_key])
-	sorted_phyla = sorted(phylum_count, key=lambda x : phylum_count[x], reverse=True)
+	tax_level_count=get_tax_level_count(blob_data[tax_key])
+	sorted_phyla = sorted(tax_level_count, key=lambda x : tax_level_count[x], reverse=True)
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -171,7 +172,7 @@ if __name__ == "__main__":
 				color = grey
 			axHistx.hist(x_i, color = color, bins = top_bins)
 			axHisty.hist(y_i, color = color, bins = right_bins, histtype='bar', orientation='horizontal')
-			axScatter.scatter(x_i, y_i, color = color, s = s, lw = lw, alpha=alpha, edgecolor=almost_black, label=phylum + " (" + str(phylum_count[phylum]) + ")")
+			axScatter.scatter(x_i, y_i, color = color, s = s, lw = lw, alpha=alpha, edgecolor=almost_black, label=phylum + " (" + str(tax_level_count[phylum]) + ")")
 			axScatter.legend(loc=1, fontsize=25, scatterpoints=1)
 			i += 1
 			if (multi_plot): # MULTI-PLOT!!!
