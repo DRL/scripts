@@ -98,10 +98,11 @@ if __name__ == "__main__":
 	# Data preparation
 
 	blob_data = np.genfromtxt(blob_file, names=True, delimiter="\t", dtype=None)
+	len_key = blob_data.dtype.names[1] 
 	gc_key = blob_data.dtype.names[2]
 	cov_key = blob_data.dtype.names[3]
 	tax_key = blob_data.dtype.names[7-tax_level]
-	x, y, phy = blob_data[gc_key], blob_data[cov_key], blob_data[tax_key]
+	x, y, z, phy = blob_data[gc_key], blob_data[cov_key], blob_data[tax_key]
 
 	tax_level_count=get_tax_level_count(blob_data[tax_key])
 	sorted_phyla = sorted(tax_level_count, key=lambda x : tax_level_count[x], reverse=True)
@@ -139,7 +140,7 @@ if __name__ == "__main__":
 	axHisty.grid(True, which="major", lw=2., color= white, linestyle='-')
 	axHistx.set_axisbelow(True)
 	axHisty.set_axisbelow(True)
-	#ajnsgklandfgsl
+	#
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	# put colormap in colors 
@@ -152,6 +153,8 @@ if __name__ == "__main__":
 	right_bins = np.logspace(-1, 10, 500, base=10.0)
 	i = 0
 	print "Plotting :"
+	last_x_i = 0
+	last_y_i = 0
 	for phylum in sorted_phyla:
 		if i < max_phylum_plot:
 			cond = (phy == phylum )
@@ -170,11 +173,17 @@ if __name__ == "__main__":
 				lw = 0.1
 				alpha = 0.5
 				color = grey
-			axHistx.hist(x_i, color = color, bins = top_bins)
-			axHisty.hist(y_i, color = color, bins = right_bins, histtype='bar', orientation='horizontal')
+			if (i > 0):
+				axHistx.hist(x_i, color = color, bins = top_bins, bottom=last_x_i)
+				axHisty.hist(y_i, color = color, bins = right_bins, histtype='bar', orientation='horizontal', bottom=last_y_i)
+			else:	
+				axHistx.hist(x_i, color = color, bins = top_bins)
+				axHisty.hist(y_i, color = color, bins = right_bins, histtype='bar', orientation='horizontal')
 			axScatter.scatter(x_i, y_i, color = color, s = s, lw = lw, alpha=alpha, edgecolor=almost_black, label=phylum + " (" + str(tax_level_count[phylum]) + ")")
 			axScatter.legend(loc=1, fontsize=25, scatterpoints=1)
 			i += 1
+			last_x_i = x_i
+			last_y_i = y_i
 			if (multi_plot): # MULTI-PLOT!!!
 				plt.savefig(out_file + "_" + phylum, format=fig_format)
 			print " [Done]"
