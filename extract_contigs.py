@@ -7,9 +7,8 @@ def read_table_to_dict (filename):
 		table_dict = {}
 		for line in fh:
 			line = line.rstrip("\n")
-			if line.startswith("contig"):
-				field = line.split("\t")
-				table_dict[field[0]]=field[1:] 
+			field = line.split("\t")
+			table_dict[field[0]]=field[1:] 
 
 def read_fasta_to_dict (filename):
 	with open(filename) as fh:
