@@ -5,8 +5,6 @@ import sys
 def read_table_to_dict (filename):
 	with open(filename) as fh:
 		table_dict = {}
-		contig = ''
-		rest = ''
 		for line in fh:
 			line = line.rstrip("\n")
 			if line.startswith("contig"):
@@ -33,6 +31,6 @@ def read_fasta_to_dict (filename):
 table_dict = read_table_to_dict(sys.argv[1])
 fasta_dict = read_fasta_to_dict(sys.argv[2])
 
-for contig in table_dict:
-	print contig
+print table_dict
+
 
