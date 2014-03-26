@@ -3,49 +3,57 @@ use strict;
 use warnings;
 # This creates $fragment_len long fragments of contigs
 use Data::Dumper;
-
 my $fragment_len = $ARGV[0];
-my $assembly_file = $ARGV[1];
-
-my $header='';
-my %hash; 
-my @array;
-
+my $len_threshold = $ARGV[1];
+my $assembly_file = $ARGV[2];
 open IN, "<$assembly_file" || die "Can't read\n";
 
-while (my $line = <IN>) {
+my $header ='';
+my $seq = '';
+my $len = 0;
+my %hash;
+my @array;
+
+while (my $line = <IN>) {    
     if ($line =~ /^>(\S+)\n/) {
         if ($header ne ''){
-            push @array, %hash;
+            push @array, {'header' => $header, 'seq' => $seq, 'len' => $len};        
         }
-    $header = $1;
-    $hash{'header'} = $header;
-    }   
-    else {   
+        $header = $1;
+        $seq = '';
+        $len = 0;
+    }    
+    else {
         chomp $line;
-        $hash{'seq'}     .= $line;
-        $hash{'len'}     += length $line;
+        $seq .= $line;
+        $len += length $line;
     }
 }
+push @array, {'header' => $header, 'seq' => $seq, 'len' => $len};        
 close IN;
-
 my $out_file = $assembly_file."_".$fragment_len.".fa";
 
+# command line args and usage
+
 open OUT, ">$out_file" || die "Can't write\n";
-foreach my $contig (keys %hash){        
-    my $len = int($hash{$contig}{'len'});
-    my $limit = $len/$fragment_len;
-    my $fragment_header = '';        
-    my $subsequence = '';
-    for (my $i=1 ; $i < $limit + 1 ;$i++){
-        $fragment_header=$contig."_$i";                
-        if ($len < $i*$fragment_len) {
-            $subsequence = substr($hash{$contig}{'seq'}, ($i-1)*$fragment_len, $fragment_len-($i*$fragment_len-$len ));
-        }                
-        else{   
-            $subsequence = substr($hash{$contig}{'seq'}, ($i-1)*$fragment_len, $fragment_len);
-        }                
-        print OUT ">".$fragment_header."\n".$subsequence."\n";        
+for my $i ( 0 .. $#array ) {
+    my $header = $array[$i]{'header'};
+    print $header."\n";
+    my $seq = $array[$i]{'seq'};
+    my $len = $array[$i]{'len'};
+    my $modulo = $len % $fragment_len;
+    my $limit = ($len-$modulo)/$fragment_len;
+    my @subsequences = ($seq =~ /(.{1,$fragment_len})/g);
+    if ($limit == 0){
+        print OUT ">".$header."_1\n".$subsequences[0]."\n";
+        next;
     }
+    if (($modulo/$fragment_len) <= $len_threshold ){
+        $subsequences[-2] .= pop @subsequences;
+    }
+    for my $j (0 .. $#subsequences){
+        print OUT ">".$header."_".($j+1)."\n".$subsequences[$j]."\n";
+    }       
 }
 close OUT;
+print $fragment_len."\n";
