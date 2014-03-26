@@ -37,8 +37,7 @@ my $out_file = $assembly_file."_".$fragment_len.".fa";
 
 open OUT, ">$out_file" || die "Can't write\n";
 for my $i ( 0 .. $#array ) {
-    my $header = $array[$i]{'header'};
-    print $header."\n";
+1    my $header = $array[$i]{'header'};
     my $seq = $array[$i]{'seq'};
     my $len = $array[$i]{'len'};
     my $modulo = $len % $fragment_len;
