@@ -25,7 +25,7 @@ Usage: fragmentizer.pl -f assembly_file.fa [-l] [-t]
    e.g at l = 1000, t = 0.5 : a 1499 nt long sequence does not get split and a 1501 nt long sequence gets split into two sequences (1000nt and 501nt) 
 # If the program encounters more than 10 consecutive N's it replaces them with 10 N's 
 USAGE
-unless $assembly_file;
+unless ($assembly_file eq '');
 
 open IN, "<$assembly_file" || die "Can't read\n";
 
