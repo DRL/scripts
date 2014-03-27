@@ -8,7 +8,9 @@ def read_table_to_dict (filename):
 		for line in fh:
 			line = line.rstrip("\n")
 			field = line.split("\t")
-			table_dict[field[0]]=field[1:] 
+			key = field[0]
+			table_dict[key] = "_" + field[4] + "_" + field[5] + "_" + field[6] + "_" + field[7] + "_"
+	return table_dict
 
 def read_fasta_to_dict (filename):
 	with open(filename) as fh:
@@ -29,7 +31,11 @@ def read_fasta_to_dict (filename):
 
 table_dict = read_table_to_dict(sys.argv[1])
 fasta_dict = read_fasta_to_dict(sys.argv[2])
+suffix = sys.argv[2][0:-19]
 
-print table_dict
+for name in table_dict:
+	search = name + "_" + suffix
+	if search in fasta_dict:
+		print ">" + search + table_dict[name] + "\n" + fasta_dict[search] 
 
 
