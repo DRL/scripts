@@ -60,4 +60,3 @@ for my $i ( 0 .. $#array ) {
     }
 }
 close OUT;
-print $fragment_len. "\n";
