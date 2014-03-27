@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 # File   : compar3.py
 # Author : Dominik R. Laetsch, dominik.laetsch at gmail dot com 
