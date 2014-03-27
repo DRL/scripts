@@ -17,7 +17,7 @@ GetOptions (
 $len_threshold = (0.5) unless $len_threshold;
 $fragment_len = (1000) unless $fragment_len;
 
-die <<USAGE
+die <<""USAGE
 
 Usage: fragmentizer.pl -f contigs1.fa contigs2.fa -l 500 -t 0.25
 -f Assembly files to be split
@@ -26,7 +26,7 @@ Usage: fragmentizer.pl -f contigs1.fa contigs2.fa -l 500 -t 0.25
    e.g at l = 1000, t = 0.5 : a 1499 nt long sequence does not get split and a 1501 nt long sequence gets split into two sequences (1000nt and 501nt) 
 # If the program encounters more than 10 consecutive N's it replaces them with 10 N's 
 
-USAGE
+USAGE""
 unless $assembly_file;
 
 open IN, "<$assembly_file" || die "Can't read\n";
