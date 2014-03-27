@@ -19,7 +19,7 @@ $fragment_len = (1000) unless $fragment_len;
 
 die <<USAGE
 Usage: fragmentizer.pl -f assembly_file.fa [-l] [-t]
--f Assembly files to be split
+-f Assembly file to be split
 -l length at which to split the sequences [default: 1000]
 -t percentage of length at which the end of the sequence gets split into a new sequence [default: 0.5].
    e.g at l = 1000, t = 0.5 : a 1499 nt long sequence does not get split and a 1501 nt long sequence gets split into two sequences (1000nt and 501nt) 
@@ -31,7 +31,6 @@ open IN, "<$assembly_file" || die "Can't read\n";
 
 my $header = '';
 my $seq    = '';
-my $len    = 0;
 my %hash;
 my @array;
 
@@ -44,7 +43,6 @@ while ( my $line = <IN> ) {
         }
         $header = $1;
         $seq    = '';
-        $len    = 0;
     }
     else {
         chomp $line;
