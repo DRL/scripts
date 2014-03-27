@@ -17,13 +17,16 @@ GetOptions (
 $len_threshold = (0.5) unless $len_threshold;
 $fragment_len = (1000) unless $fragment_len;
 
-die 
-"Usage: fragmentizer.pl -f contigs1.fa contigs2.fa -l 500 -t 0.25
+die <<USAGE
+
+Usage: fragmentizer.pl -f contigs1.fa contigs2.fa -l 500 -t 0.25
 -f Assembly files to be split
 -l length at which to split the sequences [default: 1000]
 -t percentage of length at which the end of the sequence gets split into a new sequence [default: 0.5].
    e.g at l = 1000, t = 0.5 : a 1499 nt long sequence does not get split and a 1501 nt long sequence gets split into two sequences (1000nt and 501nt) 
-If the program encounters more than 10 consecutive N's it replaces them with 10 N's" 
+# If the program encounters more than 10 consecutive N's it replaces them with 10 N's 
+
+USAGE
 unless $assembly_file;
 
 open IN, "<$assembly_file" || die "Can't read\n";
@@ -51,12 +54,10 @@ while ( my $line = <IN> ) {
         $len += length $line;
     }
 }
-$seq =~ s/N{11,}/N{10}/g;
+$seq =~ s/N{11,}/NNNNNNNNNN/g;
 push @array, { 'header' => $header, 'seq' => $seq, 'len' => $len };
 close IN;
 my $out_file = $assembly_file . "_" . $fragment_len . ".fa";
-
-
 
 open OUT, ">$out_file" || die "Can't write\n";
 for my $i ( 0 .. $#array ) {
