@@ -4,6 +4,7 @@ use warnings;
 
 # This creates $fragment_len long fragments of contigs
 use Data::Dumper;
+
 my $fragment_len  = $ARGV[0];
 my $len_threshold = $ARGV[1];
 my $assembly_file = $ARGV[2];
@@ -39,19 +40,14 @@ my $out_file = $assembly_file . "_" . $fragment_len . ".fa";
 
 open OUT, ">$out_file" || die "Can't write\n";
 for my $i ( 0 .. $#array ) {
-    my $header       = $array[$i]{'header'};
-    my $seq          = $array[$i]{'seq'};
-    my $len          = $array[$i]{'len'};
-    my $modulo       = $len % $fragment_len;
-    my $limit        = ( $len - $modulo ) / $fragment_len;
-    my @subsequences = ( $seq =~ /(.{1,$fragment_len})/g );
-    print $header. "\n";
-    print $limit. " limit \n";
-    print $len. " len \n";
-    print $modulo. " modulo \n";
-    print $#subsequences. " len of subsequences\n";
+    my $header                = $array[$i]{'header'};
+    my $seq                   = $array[$i]{'seq'};
+    my $len                   = $array[$i]{'len'};
+    my $modulo                = $len % $fragment_len;
+    my $number_of_full_chunks = ( $len - $modulo ) / $fragment_len;
+    my @subsequences          = ( $seq =~ /(.{1,$fragment_len})/g );
 
-    if ( $limit == 0 ) {
+    if ( $number_of_full_chunks == 0 ) {
         print OUT ">" . $header . "_1\n" . $subsequences[0] . "\n";
         next;
     }
