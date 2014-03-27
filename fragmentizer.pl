@@ -45,11 +45,17 @@ for my $i ( 0 .. $#array ) {
     my $modulo       = $len % $fragment_len;
     my $limit        = ( $len - $modulo ) / $fragment_len;
     my @subsequences = ( $seq =~ /(.{1,$fragment_len})/g );
+    print $header. "\n";
+    print $limit. " limit \n";
+    print $len. " len \n";
+    print $modulo. " modulo \n";
+    print $#subsequences. " len of subsequences\n";
+
     if ( $limit == 0 ) {
         print OUT ">" . $header . "_1\n" . $subsequences[0] . "\n";
         next;
     }
-    if ( ( $modulo / $fragment_len ) <= $len_threshold ) {
+    if ( $modulo > 0 && ( $modulo / $fragment_len ) <= $len_threshold ) {
         $subsequences[-2] .= pop @subsequences;
     }
     for my $j ( 0 .. $#subsequences ) {
