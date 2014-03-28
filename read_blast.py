@@ -7,6 +7,7 @@ import sys
 def read_blast_to_dict (filename):
 	with open(filename) as fh:
 		blast_dict = {}
+		tax_dict = {}
 		taxid_disparity = 0
 		ordered_contigs = []
 		for line in fh:
@@ -16,30 +17,25 @@ def read_blast_to_dict (filename):
 			current_subseq = current_query.rsplit('_',1)[1]
 			current_taxid = temp_list[1]
 			current_evalue = temp_list[11] 
-			print current_query + "\t" + current_contig + "\t" + current_subseq + "\t" + current_taxid + "\t" + current_evalue + "\n"
-			if (current_contig in blast_dict and current_query not in blast_dict[current_contig]): # if neither first sequence nor multiple hsps
-				for query in blast_dict[current_contig]:
-					last_taxid = blast_dict[current_contig][query].keys()[0]
-					if current_taxid != last_taxid:
-						print current_taxid + " != " + last_taxid
-						taxid_disparity = 1
-				blast_dict[current_contig][current_query] = { }
-				blast_dict[current_contig][current_query][current_taxid] = current_evalue
+			if (current_contig in blast_dict):
+				blast_dict[current_contig][current_query] = (current_taxid, current_evalue)
+				if current_taxid not in tax_dict:
+					taxid_disparity = 1
 			else:
-				blast_dict[current_contig] = { }
-				blast_dict[current_contig][current_query] = { }
-				blast_dict[current_contig][current_query][current_taxid] = current_evalue
-				ordered_contigs.append(current_contig)
-				print blast_dict
-				if taxid_disparity == 1:
-					print blast_dict
-					last_contig = ordered_contigs[-1]
-					print "last : " + last_contig
-					for subseq in blast_dict[last_contig]: 
-						for taxid in blast_dict[last_contig][subseq]:
-							evalue = blast_dict[last_contig][subseq][taxid]
-							print subseq + "\t" + taxid + "\t" + evalue + "\n"
+				if (taxid_disparity):
+					print "# " + ordered_contigs[-1]
+					for query in sorted(blast_dict[ordered_contigs[-1]]):
+						print query + "\t" + blast_dict[ordered_contigs[-1]][query][0] + "\t" + blast_dict[ordered_contigs[-1]][query][1]
 				taxid_disparity = 0
+				tax_dict = {}
+				blast_dict[current_contig] = {}
+				blast_dict[current_contig][current_query] = (current_taxid, current_evalue)
+				tax_dict[current_taxid] = 1
+				ordered_contigs.append(current_contig)
+		if (taxid_disparity):
+			print "# " + ordered_contigs[-1]
+			for query in sorted(blast_dict[ordered_contigs[-1]]):
+				print query + "\t" + blast_dict[ordered_contigs[-1]][query][0] + "\t" + blast_dict[ordered_contigs[-1]][query][1]
 	return blast_dict
 
 if __name__ == "__main__":
