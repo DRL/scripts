@@ -16,6 +16,7 @@ def read_blast_to_dict (filename):
 			current_subseq = current_query.rsplit('_',1)[1]
 			current_taxid = temp_list[1]
 			current_evalue = temp_list[11] 
+			print current_query + "\t" + current_contig + "\t" + current_subseq + "\t" + current_taxid + "\t" + current_evalue + "\n"
 			if (current_contig in blast_dict and current_query not in blast_dict[current_contig]): # if neither first sequence nor multiple hsps
 				for query in blast_dict[current_contig]:
 					last_taxid = blast_dict[current_contig][query].keys()[0]
