@@ -4,3 +4,5 @@ ERR*
 assembly_test.fa.txt
 *.pdf
 *.txt
+*.out
+test/*
