@@ -15,11 +15,12 @@ def print_taxid_disparities (filename, cutoff):
 			current_query = temp_list[0] # Subsequence ID
 			current_contig = current_query.rsplit('_',1)[0]
 			current_subseq = current_query.rsplit('_',1)[1]
-			current_taxid = temp_list[1]
-			current_evalue = temp_list[11]
+			current_taxid = temp_list[2]
+			current_evalue = temp_list[1]
+			current_group = temp_list[3]
 			if (current_contig in blast_dict): # if contig not seen for the first time
 				if current_query not in blast_dict[current_contig]: # if first HSP
-					blast_dict[current_contig][current_query] = (current_taxid, current_evalue) # add taxid and eval to the dict 
+					blast_dict[current_contig][current_query] = (current_taxid, current_evalue, current_group) # add taxid and eval to the dict 
 					if float(current_evalue) <= float(eval_cutoff): # if eval below cutoff
 						if current_taxid not in tax_dict: # if taxid new
 							tax_dict[current_taxid] = current_evalue # add taxid 
@@ -27,17 +28,17 @@ def print_taxid_disparities (filename, cutoff):
 				if (len(tax_dict) > 1):
 					print "# " + ordered_contigs[-1]
 					for query in sorted(blast_dict[ordered_contigs[-1]]):
-						print query + "\t" + blast_dict[ordered_contigs[-1]][query][0] + "\t" + blast_dict[ordered_contigs[-1]][query][1]
+						print query + "\t" + blast_dict[ordered_contigs[-1]][query][0] + "\t" + blast_dict[ordered_contigs[-1]][query][1] + "\t" + blast_dict[ordered_contigs[-1]][query][2]
 				tax_dict = {}
 				blast_dict[current_contig] = {}
-				blast_dict[current_contig][current_query] = (current_taxid, current_evalue)
+				blast_dict[current_contig][current_query] = (current_taxid, current_evalue, current_group)
 				if float(current_evalue) <= float(eval_cutoff): # if eval below cutoff
 					tax_dict[current_taxid] = current_evalue # add taxid 
 				ordered_contigs.append(current_contig)
 		if (len(tax_dict) > 1):
 			print "# " + ordered_contigs[-1]
 			for query in sorted(blast_dict[ordered_contigs[-1]]):
-				print query + "\t" + blast_dict[ordered_contigs[-1]][query][0] + "\t" + blast_dict[ordered_contigs[-1]][query][1]
+				print query + "\t" + blast_dict[ordered_contigs[-1]][query][0] + "\t" + blast_dict[ordered_contigs[-1]][query][1] + "\t" + blast_dict[ordered_contigs[-1]][query][2]
 	return blast_dict
 
 if __name__ == "__main__":
