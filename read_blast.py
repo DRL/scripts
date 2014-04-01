@@ -2,7 +2,31 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-import sys 
+import sys, os, argparse
+
+def check_file(infile):
+	"""Checks for existence of file."""
+	if not os.path.exists(infile):
+		parser.error("The file %s does not exist!"%infile)
+	else:
+		return infile
+
+def get_input():
+	parser = argparse.ArgumentParser(
+		prog=sys.argv[0],
+		usage = '%(prog)s infile [-e eval_cutoff] [-t target_tax_group] [-c tax_column] [-h]',
+		add_help=True)
+	parser.add_argument('i', metavar = 'infile', help='Input file (tabular blast output)')
+	parser.add_argument('-e', metavar = 'eval_cutoff', default=1e-40, type = float, help='E-value cutoff below which taxonomic disparities count (Default = 1e-40)')
+	parser.add_argument('-c', metavar = 'tax_column', default=2, type = int, help='Column in tabular blast input file that holds taxids/tax group names (Default = 2, starting at 0)')
+	parser.add_argument('-t', metavar = 'target_tax_group', default='', help='If taxonomic group name or taxid specified the program also reports all hits below E-value cutoff that hit other groups') 
+	args = parser.parse_args()
+
+	input_file = check_file(args.i)
+	eval_cutoff = args.e
+	tax_column = args.c
+	target_tax_group = args.t
+	return input_file, eval_cutoff, tax_column, target_tax_group
 
 def print_taxid_disparities (filename, cutoff):
 	eval_cutoff = cutoff
@@ -42,9 +66,5 @@ def print_taxid_disparities (filename, cutoff):
 	return blast_dict
 
 if __name__ == "__main__":
-	blast_file = sys.argv[1]
-	if (len(sys.argv) >= 3):
-		eval_cutoff = sys.argv[2]
-	else:
-		eval_cutoff = "1"
-	print_taxid_disparities(blast_file, eval_cutoff)
+	input_file, eval_cutoff, tax_column, target_tax_group = get_input()
+	print_taxid_disparities(input_file, eval_cutoff)
