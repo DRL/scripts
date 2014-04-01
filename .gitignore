@@ -6,3 +6,4 @@ assembly_test.fa.txt
 *.txt
 *.out
 test/*
+*test
