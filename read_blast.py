@@ -7,7 +7,7 @@ import sys, os, argparse
 def check_file(infile):
 	"""Checks for existence of file."""
 	if not os.path.exists(infile):
-		parser.error("The file %s does not exist!"%infile)
+		sys.exit("The file %s does not exist!"%infile)
 	else:
 		return infile
 
@@ -18,17 +18,21 @@ def get_input():
 		add_help=True)
 	parser.add_argument('i', metavar = 'infile', help='Input file (tabular blast output)')
 	parser.add_argument('-e', metavar = 'eval_cutoff', default=1e-40, type = float, help='E-value cutoff below which taxonomic disparities count (Default = 1e-40)')
-	parser.add_argument('-c', metavar = 'tax_column', default=2, type = int, help='Column in tabular blast input file that holds taxids/tax group names (Default = 2, starting at 0)')
+	parser.add_argument('-c', metavar = 'tax_column', default=12, type = int, help='Column in tabular blast input file that holds taxids/tax group names (Default = 12, starting at 0)')
 	parser.add_argument('-t', metavar = 'target_tax_group', default='', help='If taxonomic group name or taxid specified the program also reports all hits below E-value cutoff that hit other groups') 
-	args = parser.parse_args()
 
+	if len(sys.argv) == 1:
+		parser.print_help()
+		sys.exit(1)
+
+	args = parser.parse_args()
 	input_file = check_file(args.i)
 	eval_cutoff = args.e
 	tax_column = args.c
 	target_tax_group = args.t
 	return input_file, eval_cutoff, tax_column, target_tax_group
 
-def print_taxid_disparities (filename, cutoff):
+def print_taxid_disparities (filename, cutoff, tax_column):
 	eval_cutoff = cutoff
 	with open(filename) as fh:
 		blast_dict = {} 
@@ -39,9 +43,9 @@ def print_taxid_disparities (filename, cutoff):
 			current_query = temp_list[0] # Subsequence ID
 			current_contig = current_query.rsplit('_',1)[0]
 			current_subseq = current_query.rsplit('_',1)[1]
-			current_taxid = temp_list[2]
-			current_evalue = temp_list[1]
-			current_group = temp_list[3]
+			current_taxid = temp_list[tax_column]
+			current_evalue = temp_list[10]
+			current_group = temp_list[13]
 			if (current_contig in blast_dict): # if contig not seen for the first time
 				if current_query not in blast_dict[current_contig]: # if first HSP
 					blast_dict[current_contig][current_query] = (current_taxid, current_evalue, current_group) # add taxid and eval to the dict 
@@ -67,4 +71,4 @@ def print_taxid_disparities (filename, cutoff):
 
 if __name__ == "__main__":
 	input_file, eval_cutoff, tax_column, target_tax_group = get_input()
-	print_taxid_disparities(input_file, eval_cutoff)
+	print_taxid_disparities(input_file, eval_cutoff, tax_column)
