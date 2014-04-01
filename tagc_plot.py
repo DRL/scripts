@@ -72,7 +72,9 @@ if __name__ == "__main__":
 	parser.add_argument('-cm', metavar = 'colormap', default="Set2", help='Matplotlib colormap to be used for plotting (names are case-sensitive)') 
 	parser.add_argument('-m', action='store_true' , help='Set flag for multi-figure plotting.') 
 	args = parser.parse_args()
-
+	if len(sys.argv)==1:
+    	parser.print_help()
+    	sys.exit(1)
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	blob_file = check_file(args.i)
