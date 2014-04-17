@@ -49,7 +49,13 @@ while (<>){
 	}		
 }
 
-$array[0][4] = $current_end;
+if ($array[0][6] eq "+"){
+	$array[0][4] = $array[-1][4];
+}
+else{
+	$array[0][3] = $array[-1][3];
+	$array[0][4] = $array[1][4];	
+}
 for my $i (0 .. $#array){
 	my @print_array = @{$array[$i]};
 	my $print_line = join "\t", @print_array;
