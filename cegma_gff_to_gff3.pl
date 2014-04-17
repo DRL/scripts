@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use warning;
+use warnings;
 use strict;
 
 my @current_obj;
