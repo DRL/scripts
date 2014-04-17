@@ -9,7 +9,7 @@ while (<>){
 	chomp;
 	my $line = $_;
 	my @line_array = split /\t/, $line;
-	my @note_array = split /;/, $line[8];
+	my @note_array = split /;/, $line_array[8];
 	my $exon_count = 0;
 	if ($line_array[2] eq 'Internal'){
 		next;
