@@ -16,14 +16,6 @@ while (<>){
 		my @line_array = split (/\s+/, $line);
 		
 		if ($line_array[1] eq 'maker'){
-			if (@array){
-				for my $i (0 .. $#array){
-					my @print_array = @{$array[$i]};
-					my $print_line = join "\t", @print_array;
-					print $print_line."\n";
- 				}
- 				@array = ();
-			}
 			if ($line_array[2] eq 'match'){
 				$first = 1;
 				push @array, [@line_array];
