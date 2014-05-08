@@ -67,13 +67,13 @@ my %contig_taxinfo;
 my %contig_evalinfo; # DRL
 while (<$blasttaxid_fh>) {
     if ($evalue){ # DRL
-        die "Contig-taxid file $blasttaxid_file does not seem to have two cols with the seqid in the first col and taxid in the second col" unless 
+        die "Contig-taxid file $blasttaxid_file does not seem to have the blast output format '6 qseqid staxids std'" unless 
             /^(\S+)\t(\d+)\t\S+\t\S+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t(\S+)/;
         $contig_taxinfo{$1} = &taxonomy_report($2);
         $contig_evalinfo{$1}=$3;
     }
     else{
-        die "Contig-taxid file $blasttaxid_file does not seem to have two cols with the seqid in the first col and taxid in the second col" unless 
+        die "Contig-taxid file $blasttaxid_file does not seem to have the blast output format '6 qseqid staxids ...'" unless 
                 /^(\S+)\t(\d+)/;  
         $contig_taxinfo{$1} = &taxonomy_report($2);
     }
