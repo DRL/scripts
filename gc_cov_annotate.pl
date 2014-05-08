@@ -160,7 +160,7 @@ for $seqid (keys %{$fastahash}) {
     }
     print LENCOVGC "\n";
 }
-print STDERR scalar localtime() . " - Making len gc cov taxon annotation data file $assembly_file.txt for R ... DONE\n";
+print STDERR scalar localtime() . " - Making len gc cov taxon annotation data file $assembly_file.txt for plotting ... DONE\n";
 
 ############################################################
 
