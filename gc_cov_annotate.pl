@@ -36,7 +36,7 @@ foreach (@tax_list) {$tax_levels{$_}=1}
 if (not $output_file) {$output_file = $assembly_file . ".txt"};
 
 print "Usage: gc_cov_annotate.pl --evalue --blasttaxid CONTIGTAXIDFILE --assembly ASSEMBLYFASTAFILE [--taxdump TAXDUMPDIR] [--cas BAMFILE...] [--cov COVFILES...] [--taxlist species...]\n" .
-    "--evalue : outputs evalue in column before taxonomy. if evalue is specified, the script expects the blast result to be in the format '6 qseqid staxids std'.\n" . 
+    "--evalue : evalue switch. Puts evalue from blast output in column before taxonomy. If evalue is specified, the script expects the blast result to be in the format '6 qseqid staxids std'.\n" . 
     "--taxdump is '.' by default, i.e. the files nodes.dmp and names.dmp from the NCBI taxonomy database ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz are expected to be in the current directory\n" . 
     "--taxlist: default is: species order phylum superkingdom, but you can add any other NCBI taxlevel such as class family suborder etc\n" unless
     (-r $blasttaxid_file or $blasttaxid_file eq "-") and -r "$taxdump_dir/nodes.dmp" and -r "$taxdump_dir/names.dmp" and 
