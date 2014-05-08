@@ -58,7 +58,6 @@ else{
     print STDERR scalar localtime() . " - Start : No Evalue parsing ...\n";       
 }
 print STDERR scalar localtime() . " - Loading $taxdump_dir/nodes.dmp and $taxdump_dir/names.dmp into memory ...\n";
-print STDERR scalar localtime() . " - Loading $taxdump_dir/nodes.dmp and $taxdump_dir/names.dmp into memory ...\n";
 &load_nodes_names ("$taxdump_dir/nodes.dmp","$taxdump_dir/names.dmp");
 print STDERR scalar localtime() . " - Loading $taxdump_dir/nodes.dmp and $taxdump_dir/names.dmp into memory ... DONE\n";
 
