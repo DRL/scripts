@@ -12,7 +12,7 @@ dominik.laetsch@google.com 2014.05.08
 use strict;
 use warnings;
 use Getopt::Long qw(:config pass_through no_ignore_case);
-
+use Data::Dumper;
 my ($blasttaxid_file, $taxdump_dir, $assembly_file, $output_file, $evalue) = ("",".","","", 0);
 my @tax_list;
 my @cas_files;
@@ -78,7 +78,7 @@ while (<$blasttaxid_fh>) {
     }
 } 
 close $blasttaxid_fh;
-
+print Dumper(\%contig_evalinfo);
 #-----------------------------------------------------------------
 # Calculate GC, len, for assembly file, get coverage from casfiles
 #-----------------------------------------------------------------
@@ -131,8 +131,8 @@ print LENCOVGC "seqid\tlen\tgc";
 foreach (@cas_files) {print LENCOVGC "\tcov_$_"};
 foreach (@cov_files) {print LENCOVGC "\tcov_$_"};
 foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
-if ($evalue){
-    print LENCOVGC "\teval"; # DRL
+if ($evalue){# DRL
+    print LENCOVGC "\teval"; 
 }
 print LENCOVGC "\n";
 
@@ -154,6 +154,7 @@ for $seqid (keys %{$fastahash}) {
     for my $tax_level (@tax_list) {
         print LENCOVGC "\t" . (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated"); 
     }
+    print $evalue."\n";
     if ($evalue){ # DRL
         print LENCOVGC "\t" . (exists($contig_taxinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
     }
