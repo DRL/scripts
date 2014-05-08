@@ -57,7 +57,7 @@ my %contig_taxinfo;
 my %contig_evalinfo; # DRL
 while (<$blasttaxid_fh>) {
     die "Contig-taxid file $blasttaxid_file does not seem to have two cols with the seqid in the first col and taxid in the second col" unless 
-        /^(\S+)\t(\d+)\t\S+\t\S+\t\S+\t\S+\t\S+\t\S+\t\S+\t\S+\t\S+\t(\d+)/;
+        /^(\S+)\t(\d+)\t\S+\t\S+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t(\d+)/;
     $contig_taxinfo{$1} = &taxonomy_report($2);
     # DRL
     $contig_evalinfo{$1}=$3;
