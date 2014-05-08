@@ -130,10 +130,10 @@ open  LENCOVGC, ">$output_file" or die $!;
 print LENCOVGC "seqid\tlen\tgc";
 foreach (@cas_files) {print LENCOVGC "\tcov_$_"};
 foreach (@cov_files) {print LENCOVGC "\tcov_$_"};
+foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
 if ($evalue){
     print LENCOVGC "\teval"; # DRL
 }
-foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
 print LENCOVGC "\n";
 
 # for each contig/seqid:
