@@ -19,6 +19,7 @@ my @cov_files;
 
 GetOptions (
     "blasttaxid=s" => \$blasttaxid_file,
+    "evalue"    => \$evalue, #DRL
     "assembly=s"   => \$assembly_file,
     "out:s"        => \$output_file,
     "taxdump:s"    => \$taxdump_dir,
@@ -33,7 +34,8 @@ foreach (@tax_list) {$tax_levels{$_}=1}
 
 if (not $output_file) {$output_file = $assembly_file . ".txt"};
 
-print "Usage: gc_cov_annotate.pl --blasttaxid CONTIGTAXIDFILE --assembly ASSEMBLYFASTAFILE [--taxdump TAXDUMPDIR] [--cas BAMFILE...] [--cov COVFILES...] [--taxlist species...]\n" .
+print "Usage: gc_cov_annotate.pl --evalue --blasttaxid CONTIGTAXIDFILE --assembly ASSEMBLYFASTAFILE [--taxdump TAXDUMPDIR] [--cas BAMFILE...] [--cov COVFILES...] [--taxlist species...]\n" .
+    "--evalue : outputs evalue in column before taxonomy. if evalue is specified, the script expects the blast result to be in the format '6 qseqid staxids std'.\n" . 
     "--taxdump is '.' by default, i.e. the files nodes.dmp and names.dmp from the NCBI taxonomy database ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz are expected to be in the current directory\n" . 
     "--taxlist: default is: species order phylum superkingdom, but you can add any other NCBI taxlevel such as class family suborder etc\n" unless
     (-r $blasttaxid_file or $blasttaxid_file eq "-") and -r "$taxdump_dir/nodes.dmp" and -r "$taxdump_dir/names.dmp" and 
@@ -56,11 +58,17 @@ my $blasttaxid_fh = &read_fh($blasttaxid_file);
 my %contig_taxinfo;
 my %contig_evalinfo; # DRL
 while (<$blasttaxid_fh>) {
-    die "Contig-taxid file $blasttaxid_file does not seem to have two cols with the seqid in the first col and taxid in the second col" unless 
-        /^(\S+)\t(\d+)\t\S+\t\S+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t(\S+)/;
-    $contig_taxinfo{$1} = &taxonomy_report($2);
-    # DRL
-    $contig_evalinfo{$1}=$3;
+    if ($evalue){ # DRL
+        die "Contig-taxid file $blasttaxid_file does not seem to have two cols with the seqid in the first col and taxid in the second col" unless 
+            /^(\S+)\t(\d+)\t\S+\t\S+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t(\S+)/;
+        $contig_taxinfo{$1} = &taxonomy_report($2);
+        $contig_evalinfo{$1}=$3;
+    }
+    else{
+        die "Contig-taxid file $blasttaxid_file does not seem to have two cols with the seqid in the first col and taxid in the second col" unless 
+                /^(\S+)\t(\d+)/;  
+        $contig_taxinfo{$1} = &taxonomy_report($2);
+    }
 } 
 close $blasttaxid_fh;
 
@@ -82,7 +90,6 @@ for my $cas_file (@cas_files) {
     while (<CAS>) {
         # ignore comment lines/ CAS headers
         next if /^\s*$/ or /^@/ or /^#/;
-	#next unless /^ER/;
         chomp;
         @F=split/\t/;
         if (($F[9] & 4) != 4) { # DRL
@@ -116,7 +123,9 @@ open  LENCOVGC, ">$output_file" or die $!;
 print LENCOVGC "seqid\tlen\tgc";
 foreach (@cas_files) {print LENCOVGC "\tcov_$_"};
 foreach (@cov_files) {print LENCOVGC "\tcov_$_"};
-print LENCOVGC "\teval";
+if ($evalue){
+    print LENCOVGC "\teval"; # DRL
+}
 foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
 print LENCOVGC "\n";
 
@@ -135,7 +144,9 @@ for $seqid (keys %{$fastahash}) {
         $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
         print LENCOVGC "\t" . $cov;
     }
-    print LENCOVGC "\t" . (exists($contig_taxinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A");
+    if ($evalue){ # DRL
+        print LENCOVGC "\t" . (exists($contig_taxinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
+    }
     for my $tax_level (@tax_list) {
         print LENCOVGC "\t" . (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated"); 
     }
