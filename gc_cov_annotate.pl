@@ -151,11 +151,11 @@ for $seqid (keys %{$fastahash}) {
         $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
         print LENCOVGC "\t" . $cov;
     }
-    if ($evalue){ # DRL
-        print LENCOVGC "\t" . (exists($contig_taxinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
-    }
     for my $tax_level (@tax_list) {
         print LENCOVGC "\t" . (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated"); 
+    }
+    if ($evalue){ # DRL
+        print LENCOVGC "\t" . (exists($contig_taxinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
     }
     print LENCOVGC "\n";
 }
