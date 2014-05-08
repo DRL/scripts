@@ -154,8 +154,9 @@ for $seqid (keys %{$fastahash}) {
     for my $tax_level (@tax_list) {
         print LENCOVGC "\t" . (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated"); 
     }
-    if ($evalue){ # DRL
-        if (exists($contig_evalinfo{$seqid})){
+    # DRL
+    if ($evalue){ 
+        if (exists($contig_evalinfo{$seqid})){ 
             print LENCOVGC "\t" . $contig_evalinfo{$seqid};
         }
         else{
