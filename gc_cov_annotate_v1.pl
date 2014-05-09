@@ -123,7 +123,7 @@ for my $cov_file (@cov_files) {
 }
 
 # print len gc cov (one for each cas, and each cov) and taxon annotation info in one large file (that can be used for plotting by R)
-print STDERR scalar localtime() . " - Making len gc cov taxon annotation data file $assembly_file.txt for plotting ...\n";
+print STDERR scalar localtime() . " - Making len gc cov taxon annotation data file $output_file for plotting ...\n";
 open  LENCOVGC, ">$output_file" or die $!;
 
 # header row:
