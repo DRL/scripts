@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
 =head1 NAME
-gc_cov_annotate.pl
+gc_cov_annotate_v1.pl
 =head1 SYNOPSIS
-gc_cov_annotate.pl [--evalue] --blasttaxid CONTIGTAXIDFILE --assembly ASSEMBLYFASTAFILE [--taxdump TAXDUMPDIR] [--cas BAMFILE...]
+gc_cov_annotate_v1.pl [--evalue] --blasttaxid CONTIGTAXIDFILE --assembly ASSEMBLYFASTAFILE [--taxdump TAXDUMPDIR] [--cas BAMFILE...]
 =head1 AUTHORS
 sujai.kumar@zoo.ox.ac.uk 2013.09.15
 dominik.laetsch@google.com 2014.05.08
