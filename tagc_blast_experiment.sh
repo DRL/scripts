@@ -6,7 +6,7 @@
 contig_file = $1 
 out_format = '6 qseqid staxids std sskingdom sscinames sblastnames stitle'
 
-blastn -task megablast -query $contig_file -db $BLASTDB/nt -out $contig_file.megablast.out -outfmt $out_format -num_jobs 200 -evalue 1e-5 -max_target_seqs 1 
+blastn -task megablast -query $contig_file -db $BLASTDB/nt -out $contig_file.megablast.out -outfmt $out_format -evalue 1e-5 -max_target_seqs 1 
 
 # sge_blast blastn -task megablast -query $contig_file -db $BLASTDB/nt -out $contig_file.megablast.nt.out -outfmt $out_format -num_jobs 200 -evalue 1e-5 -max_target_seqs 1 
 # sge_blast blastn -task dc-megablast -query $contig_file -db $BLASTDB/nt -out $contig_file.dc-megablast.nt.out -outfmt $out_format -num_jobs 200 -evalue 1e-5 -max_target_seqs 1 
