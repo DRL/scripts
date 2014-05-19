@@ -1,30 +1,14 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
 
-# take 10% of contigs at random / run 3 times ?
-# masked/unmasked
-# time
-# http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=ProgSelectionGuide
+# masked/unmasked ?
+# time ?
 
-contig_file = $1 # absolute path
-mkdir tagc_blast_experiment
-cd tagc_blast_experiment
+contig_file = $1 
+out_format = '6 qseqid staxids std sskingdom sscinames sblastnames stitle'
 
-mkdir blastn
-mkdir blastn/megablast/nt
-mkdir blastn/megablast/est
-mkdir blastn/megablast/env_nt
-
-mkdir blastn/discontiguous_megablast/nt
-mkdir blastn/discontiguous_megablast/est
-mkdir blastn/discontiguous_megablast/env_nt
-
-mkdir blastn/blastn/nt
-mkdir blastn/blastn/est
-mkdir blastn/blastn/env_nt
-
-mkdir blastx
-mkdir blastx/nr 
-mkdir tblastx/
+sge_blast blastn -task megablast -query $contig_file -db $BLASTDB/nt -out $contig_file.megablast.out -outfmt $out_format -num_jobs 200 -evalue 1e-5 -max_target_seqs 1 
+sge_blast blastn -task dc-megablast -query $contig_file -db $BLASTDB/nt -out $contig_file.dc-megablast.out -outfmt $out_format -num_jobs 200 -evalue 1e-5 -max_target_seqs 1 
+sge_blast blastn -task blastn -query $contig_file -db $BLASTDB/nt -out $contig_file.blastn.out -outfmt $out_format -num_jobs 200 -evalue 1e-5 -max_target_seqs 1 
 
 # program that then takes the blast output files and reports for each contig the kingdom and species of best hit and eval, length and gc 
 # make a blobplot for each blast
