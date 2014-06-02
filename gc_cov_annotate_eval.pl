@@ -13,7 +13,7 @@ use strict;
 use warnings;
 use Getopt::Long qw(:config pass_through no_ignore_case);
 
-my ($blasttaxid_file, $taxdump_dir, $assembly_file, $output_file, $evalue) = ("",".","","", 0);
+my ($blasttaxid_file, $taxdump_dir, $assembly_file, $output_file, $evalue, $newformat) = ("",".","","", 0, 0);
 my @tax_list;
 my @cas_files;
 my @cov_files;
