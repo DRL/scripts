@@ -130,7 +130,7 @@ open  LENCOVGC, ">$output_file" or die $!;
 
 # for each contig/seqid:
 my ($seqid, $length, $gccount, $nonatgc, $totalcov, $cov, $tax); # declared outside loop for efficiency
-if (newformat){
+if ($newformat){
     # header row:
     print LENCOVGC "ID\tlen\tgc";
     print LENCOVGC "\tcov";
