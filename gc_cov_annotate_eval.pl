@@ -154,12 +154,12 @@ if ($newformat){
             $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
             print LENCOVGC $cov_file."=".$cov.";";
         }
-        print LENCOVGC "\t"
+        print LENCOVGC "\t";
         for my $tax_level (@tax_list) {
             $tax = (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated");
             print LENCOVGC $tax_level."=".$tax.";";
         }
-        print LENCOVGC "\t"
+        print LENCOVGC "\t";
         if ($evalue){ # DRL
             print LENCOVGC (exists($contig_evalinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
         }
