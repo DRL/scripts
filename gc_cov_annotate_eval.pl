@@ -20,6 +20,7 @@ my @cov_files;
 
 GetOptions (
     "blasttaxid=s" => \$blasttaxid_file,
+    "newformat" => \$newformat, #DRL
     "evalue"    => \$evalue, #DRL
     "assembly=s"   => \$assembly_file,
     "out:s"        => \$output_file,
@@ -35,7 +36,8 @@ foreach (@tax_list) {$tax_levels{$_}=1}
 
 if (not $output_file) {$output_file = $assembly_file . ".txt"};
 
-print "Usage: gc_cov_annotate.pl --evalue --blasttaxid CONTIGTAXIDFILE --assembly ASSEMBLYFASTAFILE [--taxdump TAXDUMPDIR] [--cas BAMFILE...] [--cov COVFILES...] [--taxlist species...]\n" .
+print "Usage: gc_cov_annotate.pl --evalue --newformat --blasttaxid CONTIGTAXIDFILE --assembly ASSEMBLYFASTAFILE [--taxdump TAXDUMPDIR] [--cas BAMFILE...] [--cov COVFILES...] [--taxlist species...]\n" .
+    "--newformat : newformat switch. Prints output in new format'.\n" . 
     "--evalue : evalue switch. Puts evalue from blast output in column before taxonomy. If evalue is specified, the script expects the blast result to be in the format '6 qseqid staxids std'.\n" . 
     "--taxdump is '.' by default, i.e. the files nodes.dmp and names.dmp from the NCBI taxonomy database ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz are expected to be in the current directory\n" . 
     "--taxlist: default is: species order phylum superkingdom, but you can add any other NCBI taxlevel such as class family suborder etc\n" unless
@@ -126,38 +128,73 @@ for my $cov_file (@cov_files) {
 print STDERR scalar localtime() . " - Making len gc cov taxon annotation data file $output_file for plotting ...\n";
 open  LENCOVGC, ">$output_file" or die $!;
 
-# header row:
-print LENCOVGC "seqid\tlen\tgc";
-foreach (@cas_files) {print LENCOVGC "\tcov_$_"};
-foreach (@cov_files) {print LENCOVGC "\tcov_$_"};
-foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
-if ($evalue){# DRL
-    print LENCOVGC "\teval"; 
-}
-print LENCOVGC "\n";
-
 # for each contig/seqid:
-my ($seqid, $length, $gccount, $nonatgc, $totalcov, $cov); # declared outside loop for efficiency
-for $seqid (keys %{$fastahash}) { 
-    $length   = $$fastahash{$seqid}{len};
-    $gccount  = $$fastahash{$seqid}{gc};
-    $nonatgc  = $$fastahash{$seqid}{nonatgc};
-    print LENCOVGC "$seqid\t$length\t". ($gccount/($length-$nonatgc));
-    for my $cas_file (@cas_files) {
-        $cov = (exists($$fastahash{$seqid}{$cas_file}) ? $$fastahash{$seqid}{$cas_file} : 0);
-        print LENCOVGC "\t" . $cov;
-    }
-    for my $cov_file (@cov_files) {
-        $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
-        print LENCOVGC "\t" . $cov;
-    }
-    for my $tax_level (@tax_list) {
-        print LENCOVGC "\t" . (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated"); 
-    }
-    if ($evalue){ # DRL
-        print LENCOVGC "\t" . (exists($contig_evalinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
+my ($seqid, $length, $gccount, $nonatgc, $totalcov, $cov, $tax); # declared outside loop for efficiency
+if (newformat){
+    # header row:
+    print LENCOVGC "ID\tlen\tgc";
+    print LENCOVGC "\tcov"
+    #foreach (@cas_files) {print LENCOVGC "\tcov_$_"};
+    print LENCOVGC "\ttax";
+    #foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
+    if ($evalue){# DRL
+        print LENCOVGC "\teval"; 
     }
     print LENCOVGC "\n";
+    for $seqid (keys %{$fastahash}) { 
+        $length   = $$fastahash{$seqid}{len};
+        $gccount  = $$fastahash{$seqid}{gc};
+        $nonatgc  = $$fastahash{$seqid}{nonatgc};
+        print LENCOVGC "$seqid\t$length\t". ($gccount/($length-$nonatgc))."\t";
+        for my $cas_file (@cas_files) {
+            $cov = (exists($$fastahash{$seqid}{$cas_file}) ? $$fastahash{$seqid}{$cas_file} : 0);
+            print LENCOVGC $cas_file."=".$cov";";
+        }
+        for my $cov_file (@cov_files) {
+            $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
+            print LENCOVGC $cas_file."=".$cov";";
+        }
+        for my $tax_level (@tax_list) {
+            $tax = (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated");
+            print LENCOVGC $tax_level."=".$tax";";
+        }
+        if ($evalue){ # DRL
+            print LENCOVGC "\t" . (exists($contig_evalinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
+        }
+        print LENCOVGC "\n";
+    }
+}
+else{
+    # header row:
+    print LENCOVGC "seqid\tlen\tgc";
+    foreach (@cas_files) {print LENCOVGC "\tcov_$_"};
+    foreach (@cov_files) {print LENCOVGC "\tcov_$_"};
+    foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
+    if ($evalue){# DRL
+        print LENCOVGC "\teval"; 
+    }
+    print LENCOVGC "\n";
+    for $seqid (keys %{$fastahash}) { 
+        $length   = $$fastahash{$seqid}{len};
+        $gccount  = $$fastahash{$seqid}{gc};
+        $nonatgc  = $$fastahash{$seqid}{nonatgc};
+        print LENCOVGC "$seqid\t$length\t". ($gccount/($length-$nonatgc));
+        for my $cas_file (@cas_files) {
+            $cov = (exists($$fastahash{$seqid}{$cas_file}) ? $$fastahash{$seqid}{$cas_file} : 0);
+            print LENCOVGC "\t" . $cov;
+        }
+        for my $cov_file (@cov_files) {
+            $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
+            print LENCOVGC "\t" . $cov;
+        }
+        for my $tax_level (@tax_list) {
+            print LENCOVGC "\t" . (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated"); 
+        }
+        if ($evalue){ # DRL
+            print LENCOVGC "\t" . (exists($contig_evalinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
+        }
+        print LENCOVGC "\n";
+    }
 }
 print STDERR scalar localtime() . " - Making len gc cov taxon annotation data file $assembly_file.txt for plotting ... DONE\n";
 
