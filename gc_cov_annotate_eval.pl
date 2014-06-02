@@ -152,7 +152,7 @@ if (newformat){
         }
         for my $cov_file (@cov_files) {
             $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
-            print LENCOVGC $cas_file."=".$cov.";";
+            print LENCOVGC $cov_file."=".$cov.";";
         }
         for my $tax_level (@tax_list) {
             $tax = (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated");
