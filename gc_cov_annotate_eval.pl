@@ -148,15 +148,15 @@ if (newformat){
         print LENCOVGC "$seqid\t$length\t". ($gccount/($length-$nonatgc))."\t";
         for my $cas_file (@cas_files) {
             $cov = (exists($$fastahash{$seqid}{$cas_file}) ? $$fastahash{$seqid}{$cas_file} : 0);
-            print LENCOVGC $cas_file."=".$cov";";
+            print LENCOVGC $cas_file."=".$cov.";";
         }
         for my $cov_file (@cov_files) {
             $cov = (exists($$fastahash{$seqid}{$cov_file}) ? $$fastahash{$seqid}{$cov_file} : 0);
-            print LENCOVGC $cas_file."=".$cov";";
+            print LENCOVGC $cas_file."=".$cov.";";
         }
         for my $tax_level (@tax_list) {
             $tax = (exists(${$contig_taxinfo{$seqid}}{$tax_level}) ? ${$contig_taxinfo{$seqid}}{$tax_level} : "Not annotated");
-            print LENCOVGC $tax_level."=".$tax";";
+            print LENCOVGC $tax_level."=".$tax.";";
         }
         if ($evalue){ # DRL
             print LENCOVGC "\t" . (exists($contig_evalinfo{$seqid}) ? $contig_evalinfo{$seqid} : "N/A"); 
