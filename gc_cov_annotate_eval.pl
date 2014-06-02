@@ -133,7 +133,7 @@ my ($seqid, $length, $gccount, $nonatgc, $totalcov, $cov, $tax); # declared outs
 if (newformat){
     # header row:
     print LENCOVGC "ID\tlen\tgc";
-    print LENCOVGC "\tcov"
+    print LENCOVGC "\tcov";
     #foreach (@cas_files) {print LENCOVGC "\tcov_$_"};
     print LENCOVGC "\ttax";
     #foreach (@tax_list)  {print LENCOVGC "\ttaxlevel_$_"};
